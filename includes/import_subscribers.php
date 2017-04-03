@@ -17,7 +17,7 @@
                <label><strong><?php _e("Copy/Paste from Excel","sola"); ?></strong></label>
             </td>
             <td>
-                <textarea name='sub_import_excel' id='sub_import_excel' style='width:70%; height:300px;' placeholder='Email address, First name, Last name'><?php if(isset($_POST['sub_import_excel'])) { echo $_POST['sub_import_excel']; } ?></textarea>
+                <textarea name='sub_import_excel' id='sub_import_excel' style='width:70%; height:300px;' placeholder='Email address, First name, Last name'><?php if(isset($_POST['sub_import_excel'])) { echo esc_attr($_POST['sub_import_excel']); } ?></textarea>
             </td>
          </tr>
          <tr>

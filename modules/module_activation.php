@@ -1,4 +1,6 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 function sola_nl_activate() {
     sola_nl_handle_db();
     $blogname = get_option("blogname");

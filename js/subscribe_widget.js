@@ -14,7 +14,7 @@ jQuery(function(){
                 type:"POST",
                 data: form,
                 beforeSend: function(){
-                    jQuery(div).empty().append('<p><img width="25px"  src="wp-content/plugins/sola-newsletters/images/loading.gif" /> Subscribing...</p>');
+                    jQuery(div).empty().append('<p><img width="25px"  src="'+sola_nl_loader_gif_url+'" /> Subscribing...</p>');
                 },
                 error: function(jqXHR, exception) {
                     if (jqXHR.status === 0) {

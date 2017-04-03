@@ -1,6 +1,13 @@
 <?php 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+check_admin_referer('sola_nl_create_camp');
+if(!current_user_can("manage_options")){
+    exit;
+}
+
 if(isset($_GET['camp_id'])){
-    $camp = sola_nl_get_camp_details($_GET['camp_id']);
+    $camp = sola_nl_get_camp_details(intval($_GET['camp_id']));
 } else {
     $camp = false;
 }

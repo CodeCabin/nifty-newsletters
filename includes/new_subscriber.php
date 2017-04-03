@@ -1,8 +1,17 @@
-<?php if(isset($_GET['sub_id'])){
-    $subscriber = sola_nl_get_subscriber($_GET['sub_id']); 
+<?php 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+check_admin_referer('sola_nl_new_subscriber');
+if(!current_user_can("manage_options")){
+    exit;
+}
+
+if(isset($_GET['sub_id'])){
+    $subscriber = sola_nl_get_subscriber(intval($_GET['sub_id'])); 
 } else {
     $subscriber = false;
 }
+
 ?>
 <div class='wrap'>
         
@@ -10,7 +19,7 @@
    <div id="icon-edit" class="icon32 icon32-posts-post"><br></div>
    
    <h2>
-      <?php _e("Add Subscriber","sola") ?>
+      <?php if (!isset($subscriber)) { _e("Add Subscriber","sola"); } else { _e("Edit Subscriber","sola"); } ?>
    </h2>
    
    
@@ -45,7 +54,7 @@
                   <label><?php echo $list->list_name ?> (<?php echo sola_nl_total_list_subscribers($list->list_id) ?>)</label>
                   <p class="description"><?php echo $list->list_description ?></p>
                   <?php
-               }?>
+               }  ?>
                
                
             </td>

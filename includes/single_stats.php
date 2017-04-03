@@ -1,4 +1,13 @@
 <?php 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+/**
+ * Removed as WP3.2 doesnt like this
+ */
+// check_admin_referer();
+if(!current_user_can("manage_options")){
+    exit;
+}
 
 global $sola_nl_camp_subs_tbl;
 global $sola_nl_link_tracking_table;
@@ -6,11 +15,11 @@ global $sola_nl_subs_list_tbl;
 global $sola_nl_subs_tbl;
 global $wpdb;
 
-$camp_id = $_GET['camp_id'];
+$camp_id = intval($_GET['camp_id']);
 ?>
 <div id="wpbody-content"> 
         <div class="wrap">
-        <a href="admin.php?page=sola-nl-menu&action=camp_stats&camp_id=<?php echo $camp_id; ?>" class="button button-primary">Return To Stats</a>
+        <a href="<?php echo admin_url('admin.php?page=sola-nl-menu&action=camp_stats&camp_id=' . $camp_id) ; ?>" class="button button-primary">Return To Stats</a>
 <?php
 if (isset($_GET['sent'])) {
     $subs = sola_nl_get_camp_subs($camp_id, true);
@@ -43,7 +52,7 @@ if (isset($_GET['sent'])) {
                 <?php echo $i; ?>
             </td>
             <td>
-                <a href="admin.php?page=sola-nl-menu&action=new_subscriber&sub_id=<?php echo $sub->sub_id; ?>" title="Edit This Subscriber For Future Use"><?php echo $result->sub_name; ?></a>
+                <a href="<?php echo admin_url('admin.php?page=sola-nl-menu&action=new_subscriber&sub_id=' . $sub->sub_id) ; ?>" title="Edit This Subscriber For Future Use"><?php echo $result->sub_name; ?></a>
             </td>
             <td>
                 <?php echo $result->sub_email; ?>
@@ -93,7 +102,7 @@ if (isset($_GET['sent'])) {
                 <?php echo $i; ?>
             </td>
             <td>
-                <a href="admin.php?page=sola-nl-menu&action=new_subscriber&sub_id=<?php echo $sub->sub_id; ?>" title="Edit This Subscriber For Future Use"><?php echo $result->sub_name; ?></a>
+                <a href="<?php echo admin_url('admin.php?page=sola-nl-menu&action=new_subscriber&sub_id=' . $sub->sub_id) ; ?>" title="Edit This Subscriber For Future Use"><?php echo $result->sub_name; ?></a>
             </td>
             <td>
                 <?php echo $result->sub_email; ?>

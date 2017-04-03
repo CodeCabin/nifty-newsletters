@@ -1,6 +1,16 @@
 <?php 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+/**
+ * Removing the below as WP doesn't like this since 3.2
+ */
+// check_admin_referer(); //Broad scope check to see if default admin nonce is present. 
+if(!current_user_can("manage_options")){
+    exit;
+}
+
 if(isset($_GET['camp_id'])){
-    $camp_id = $_GET['camp_id'];
+    $camp_id = intval($_GET['camp_id']);
 }
 $current_page = 1;
 $order = "DESC";
@@ -8,13 +18,13 @@ $order = "DESC";
 $orderBy = "type";
 $limit = 10;
 if(isset($_GET["p"])){
-    $current_page = $_GET["p"];
+    $current_page = sanitize_text_field($_GET["p"]);
 }
 if(isset($_GET["order"])){
-    $order = $_GET["order"];
+    $order = sanitize_text_field($_GET["order"]);
 }
 if(isset($_GET["orderBy"])){
-    $orderBy = $_GET["orderBy"];
+    $orderBy = sanitize_text_field($_GET["orderBy"]);
 }
 if($order == "DESC"){
     $orderswop = "ASC";
@@ -24,7 +34,7 @@ if($order == "DESC"){
 $lc_order = strtolower($order);
 
 if(isset($_GET['campaigns'])){
-    $campaign_name_search = $_GET['campaigns'];
+    $campaign_name_search = sanitize_text_field($_GET['campaigns']);
     $camps = sola_nl_get_camps($limit, $current_page, $order, $orderBy, $campaign_name_search);
 } else{
     $campaign_name_search = "";
@@ -48,7 +58,7 @@ $sola_nl_ajax_nonce = wp_create_nonce("sola_nl");
     </div>
     <h2>
         <?php _e("My Newsletter Campaigns","sola") ?>
-        <a href="?page=sola-nl-menu&action=new_campaign" class="add-new-h2">
+        <a href="<?php echo wp_nonce_url('?page=sola-nl-menu&action=new_campaign', 'sola_nl_create_camp'); ?>" class="add-new-h2">
             <?php _e("New Campaign","sola") ?>
         </a>
     </h2>
@@ -143,26 +153,26 @@ $sola_nl_ajax_nonce = wp_create_nonce("sola_nl");
                             </td>                            
                             <td>
                                 <strong>
-                                    <a class="row-title" <?php if ($camp->status == 0 ) { echo "href=\"?page=sola-nl-menu&action=editor&camp_id=".$camp->camp_id."\""; }
-                                    else if($camp->status >= 1 && $camp->type != 2) { echo "href=\"?page=sola-nl-menu&action=camp_stats&camp_id=".$camp->camp_id."\""; } else if ($camp->type == 2) { echo "href=\"?page=sola-nl-menu&action=editor&camp_id=".$camp->camp_id."\""; }?>>
+                                    <a class="row-title" <?php if ($camp->status == 0 ) { echo "href=\"" . admin_url("admin.php?page=sola-nl-menu&action=editor&camp_id=".$camp->camp_id) . "\""; }
+                                    else if($camp->status >= 1 && $camp->type != 2) { echo "href=\"" . admin_url("admin.php?page=sola-nl-menu&action=camp_stats&camp_id=".$camp->camp_id) . "\""; } else if ($camp->type == 2) { echo "href=\"?page=sola-nl-menu&action=editor&camp_id=".$camp->camp_id."\""; }?>>
                                         <?php echo stripslashes($camp->subject); ?>
                                     </a>
                                 </strong>
                                 <div class="row-actions">
                                     <?php if ($camp->email == "" || !$camp->email) { if($camp->type == 2){ } } else { ?>
                                     <span>
-                                       <a target="_BLANK" href="<?php echo SITE_URL."/?action=sola_nl_browser&camp_id=".$camp->camp_id."&sub_id=0"; ?>"><?php _e("Preview","sola"); ?></a>
+                                       <a target="_BLANK" href="<?php echo site_url("?action=sola_nl_browser&camp_id=".$camp->camp_id."&sub_id=0"); ?>"><?php _e("Preview","sola"); ?></a>
                                     </span>
                                     <?php } ?>                                    
                                     <span>|</span>
                                         <?php if ($camp->type != 2 && ($camp->status >= 1 && $camp->status < 9)) { ?>
                                     <span>
-                                       <a href="?page=sola-nl-menu&action=camp_stats&camp_id=<?php echo $camp->camp_id; ?>"><?php _e("View Stats","sola"); ?></a>
+                                       <a href="<?php echo admin_url("admin.php?page=sola-nl-menu&action=camp_stats&camp_id=" . $camp->camp_id) ; ?>"><?php _e("View Stats","sola"); ?></a>
                                     </span>
                                     <?php } else { ?>
                                     <span>
-                                        <a <?php if ($camp->status == 0 ) { echo "href=\"?page=sola-nl-menu&action=editor&camp_id=".$camp->camp_id."\""; }
-                                    else if($camp->status >= 1 && $camp->type != 2) { echo "href=\"?page=sola-nl-menu&action=new_campaign&camp_id=".$camp->camp_id."\""; } else if ($camp->type == 2) { echo "href=\"?page=sola-nl-menu&action=editor&camp_id=".$camp->camp_id."\""; }?>>
+                                        <a <?php if ($camp->status == 0 ) { echo "href=\"" . admin_url("admin.php?page=sola-nl-menu&action=editor&camp_id=".$camp->camp_id) . "\"" ; }
+                                    else if($camp->status >= 1 && $camp->type != 2) { echo "href=\"" . admin_url("admin.php?page=sola-nl-menu&action=new_campaign&camp_id=".$camp->camp_id) ."\""; } else if ($camp->type == 2) { echo "href=\"" . admin_url("admin.php?page=sola-nl-menu&action=editor&camp_id=".$camp->camp_id) ."\""; }?>>
                                         <?php _e("Edit","sola"); ?>
                                     </a>
                                         
@@ -172,12 +182,12 @@ $sola_nl_ajax_nonce = wp_create_nonce("sola_nl");
                                         <?php if ($camp->email == "" || !$camp->email) { } else { ?>
                                         <span>|</span>
                                         <span>
-                                           <a href="?page=sola-nl-menu&action=duplicate_campaign&camp_id=<?php echo $camp->camp_id; ?>"><?php _e("Duplicate","sola"); ?></a>
+                                           <a href="<?php echo wp_nonce_url('?page=sola-nl-menu&action=duplicate_campaign&camp_id=' . $camp->camp_id, 'sola_nl_duplicate_camp'); ?>"><?php _e("Duplicate","sola"); ?></a>
                                         </span>
                                     <?php } ?>
                                     <span>|</span>
                                     <span class="trash">
-                                        <a href="?page=sola-nl-menu&action=delete_camp&camp_id=<?php echo $camp->camp_id; ?>" ><?php _e("Delete","sola"); ?></a>
+                                        <a href="<?php echo wp_nonce_url('?page=sola-nl-menu&action=delete_camp&camp_id=' . $camp->camp_id, 'sola_nl_delete_camp');?>" ><?php _e("Delete","sola"); ?></a>
                                     </span>
                                     <?php if($camp->type != 2){ ?>
                                         <?php if ($camp->status == 2 || $camp->status == 3) { ?>

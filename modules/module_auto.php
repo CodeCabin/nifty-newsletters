@@ -1,4 +1,5 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 //add_action( 'user_register', 'sola_nl_auto_new_user', 10, 1 );
 //

@@ -1,4 +1,5 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 function sola_import_subscribers($data,$list) {
     if (!isset($data) || $data == "") {

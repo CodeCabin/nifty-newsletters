@@ -3,12 +3,28 @@
 Plugin Name: Nifty Newsletters
 Plugin URI: http://www.solaplugins.com
 Description: Create beautiful email newsletters in a flash with Nifty Newsletters.
-Version: 4.0.14
+Version: 4.0.18
 Author: SolaPlugins
 Author URI: http://www.solaplugins.com
 */
 
-/* 
+/**
+ * 4.0.18 - 2017-04-03 - Medium priority
+ * Fixed bugs that caused the 'Are you sure you want to do this?' when performing some actions
+ * PHP Warnings fixed 
+ * Replaced a deprecated function on the feedback page
+ * 
+ * 4.0.17 - 2017-02-24 - High priority
+ * Further changes regarding security issues
+ * 
+ * 4.0.16 - 2017-02-21 - High Priority
+ * Secuirty Improvements
+ * Changed the way theme templates load images
+ * Canged the way JS files load images (localized)
+ *
+ * 4.0.15 - 2017-02-17 - High Priority
+ * PHPMailer Removed from the plugin
+ * 
  * 4.0.14 - 2016-05-12 - Medium priority
  * Fixed a bug that was experienced on some servers that caused multiple emails to be sent to users when a previous email failed
  * New blank newsletter theme
@@ -179,6 +195,8 @@ Author URI: http://www.solaplugins.com
  *
  */
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 ob_start();
 global $sola_nl_version;
 global $sola_nl_p_version;
@@ -205,7 +223,7 @@ define("SOLA_PLUGIN_NAME","Nifty Newsletters");
 
 global $sola_nl_version;
 global $sola_nl_version_string;
-$sola_nl_version = "4.0.14";
+$sola_nl_version = "4.0.18";
 $sola_nl_version_string = "";
 
 
@@ -226,11 +244,11 @@ $sola_nl_themes_table = $sola_nl_tblprfx."themes";
 $sola_nl_advanced_link_tracking_table = $sola_nl_tblprfx."advanced_link_tracking";
 
 
-$plugin_url = ABSPATH.'wp-content/plugins';
+$plugin_url = rtrim(plugin_dir_path(__FILE__), "/");
 
 define("SITE_URL", get_bloginfo('url'));
 define("THEME_URL", '');
-define("PLUGIN_URL", $plugin_url.'/sola-newsletters');
+define("PLUGIN_URL", $plugin_url);
 define("PLUGIN_DIR", plugins_url().'/sola-newsletters');
 
 include "modules/module_editor.php";
@@ -239,6 +257,8 @@ include "modules/module_widget.php";
 include "modules/module_activation.php";
 include "modules/module_auto.php";
 include "modules/module_subscribers.php";
+
+include "includes/template_shortcode_replacer.php";
 
 add_action('admin_bar_menu', 'sola_sending_mails_tool_bar_name', 998);
 add_action('admin_bar_menu', 'sola_sending_mails_tool_bar', 999 );
@@ -457,7 +477,7 @@ function sola_nl_action_callback() {
         // }
 
         if ($_POST['action'] == "get_perc"){
-            if (isset($_POST['camp_id'])) { $camp_id = $_POST['camp_id']; } else { return false; }
+            if (isset($_POST['camp_id'])) { $camp_id = intval($_POST['camp_id']); } else { return false; }
 
             $sql = "SELECT COUNT(`id`) as `total` FROM `$sola_nl_camp_subs_tbl` WHERE `camp_id` = '$camp_id'";
             $sdf = $wpdb->get_row($sql);
@@ -507,16 +527,15 @@ function sola_nl_action_callback() {
         }
 
         if ($_POST['action'] == "force_send") {
-            if (isset($_POST['camp_id'])) { $camp_id = $_POST['camp_id']; } else { return false; }
-            sola_cron_send($_POST['camp_id']);
+            if (isset($_POST['camp_id'])) { $camp_id = intval($_POST['camp_id']); } else { return false; }
+            sola_cron_send($camp_id);
         }
 
         if ($_POST['action'] == "save_template") {
 
-            //var_dump($_POST);
             $sola_html = $_POST['sola_html'];
-            $camp_id = $_POST['camp_id'];
-            $auto_options_array = $_POST['auto_options'];
+            $camp_id = intval($_POST['camp_id']);
+            $auto_options_array = sanitize_text_field($_POST['auto_options']);
 
             $auto_option = $auto_options_array;
             //var_dump($auto_option);
@@ -551,7 +570,7 @@ function sola_nl_action_callback() {
 
             $auto_data = maybe_serialize($raw_auto_data_unserialized);
 
-            if (isset($_POST['auto_options'])) { $auto_options = $_POST['auto_options']; } else { $auto_options = ""; }
+            if (isset($_POST['auto_options'])) { $auto_options = sanitize_text_field($_POST['auto_options']); } else { $auto_options = ""; }
 
 
 //            $doc = new DOMDocument();
@@ -608,7 +627,7 @@ function sola_nl_action_callback() {
                 
                 /* albert */
                 
-                $sub_email = $_POST["sub_email"];
+                $sub_email = sanitize_email($_POST["sub_email"]);
                 $sql = "SELECT * FROM `$sola_nl_subs_tbl` WHERE `sub_email` = '$sub_email'";
                 $result = $wpdb->get_row($sql);
                 $sub_key =  $result->sub_key;
@@ -658,7 +677,7 @@ function sola_nl_action_callback() {
 
                 $body = do_shortcode(nl2br(get_option("sola_nl_confirm_mail")));
                 $subject = get_option('sola_nl_confirm_subject');
-                sola_mail("", $_POST['sub_email'], $subject, $body);
+                sola_mail("", sanitize_text_field($_POST['sub_email']), $subject, $body);
                 echo get_option("sola_nl_confirm_thank_you");
 
             }
@@ -669,11 +688,11 @@ function sola_nl_action_callback() {
             sola_nl_test_mail_2();
         }
         if($_POST['action'] == "send_mail"){
-            sola_nl_ajax_send($_POST['subscribers'], $_POST['camp_id']);
+            sola_nl_ajax_send(sanitize_text_field($_POST['subscribers']), intval($_POST['camp_id']));
             //sola_nl_send_mail();
         }
         if($_POST['action'] == "done_sending"){
-            sola_nl_done_sending_camp($_POST['camp_id']);
+            sola_nl_done_sending_camp(intval($_POST['camp_id']));
         }
         if($_POST['action'] == "sola_get_next_subs"){
             extract($_POST);
@@ -751,7 +770,7 @@ function sola_nl_wp_head() {
 
 
     if (isset($_POST['sola_nl_send_feedback'])) {
-        if(wp_mail("support@solaplugins.com", "Plugin feedback", "Name: ".$_POST['sola_nl_feedback_name']."\n\r"."Email: ".$_POST['sola_nl_feedback_email']."\n\r"."Website: ".$_POST['sola_nl_feedback_website']."\n\r"."Feedback:".$_POST['sola_nl_feedback_feedback'] )){
+        if(wp_mail("support@solaplugins.com", "Plugin feedback", "Name: ".sanitize_text_field($_POST['sola_nl_feedback_name'])."\n\r"."Email: ".sanitize_email($_POST['sola_nl_feedback_email'])."\n\r"."Website: ".sanitize_text_field($_POST['sola_nl_feedback_website'])."\n\r"."Feedback:".sanitize_text_field($_POST['sola_nl_feedback_feedback']) )){
             echo "<div id=\"message\" class=\"updated\"><p>".__("Thank you for your feedback. We will be in touch soon","sola")."</p></div>";
         } else {
 
@@ -791,18 +810,18 @@ function sola_nl_wp_head() {
                if ( is_wp_error($arm_nl_check) ) sola_return_error($arm_nl_check);
                 else {
                     $_SESSION['arm_nl_success'] = __("Subscribers Imported Successfully","sola");
-                    wp_redirect("admin.php?page=sola-nl-menu-subscribers");
+                    wp_redirect(admin_url('admin.php?page=sola-nl-menu-subscribers'));
                     exit('Cannot redirect');
                 }
 
            }
        } else {
 
-            $arm_nl_check = sola_import_subscribers($_POST['sub_import_excel'],$_POST['sub_list']);
+            $arm_nl_check = sola_import_subscribers(sanitize_text_field($_POST['sub_import_excel']),sanitize_text_field($_POST['sub_list']));
             if ( is_wp_error($arm_nl_check) ) sola_return_error($arm_nl_check);
             else {
                 $_SESSION['arm_nl_success'] = __("Subscribers Imported Successfully","sola");
-                wp_redirect("admin.php?page=sola-nl-menu-subscribers");
+                wp_redirect(admin_url('admin.php?page=sola-nl-menu-subscribers'));
                 exit('Cannot redirect');
             }
        }
@@ -832,16 +851,21 @@ function sola_nl_wp_head() {
          else echo "<div id=\"message\" class=\"updated\"><p>".__("Subscribers Deleted","sola")."</p></div>";
    }
    if(isset($_GET['action']) && $_GET['action'] == "delete_camp"){
+    check_admin_referer('sola_nl_delete_camp');
+    if(!current_user_can("manage_options")){ } else {
+      //Has permission to delete
       $sola_nl_check = sola_nl_delete_camp();
       if ( is_wp_error($sola_nl_check) ) sola_return_error($sola_nl_check);
       else echo "<div id=\"message\" class=\"updated\"><p>".__("Campaign Deleted","sola")."</p></div>";
+
+    }
 
    }
    if(isset($_GET['action']) && $_GET['action'] == "pause_sending"){
       $sola_nl_check = sola_nl_pause_camp();
       if ( is_wp_error($sola_nl_check) ) { sola_return_error($sola_nl_check); }
       else {
-        $newurl = site_url()."/wp-admin/admin.php?page=sola-nl-menu";
+        $newurl = admin_url("admin.php?page=sola-nl-menu");
         ob_end_clean();
         header("location:".$newurl);
       }
@@ -850,7 +874,7 @@ function sola_nl_wp_head() {
       $sola_nl_check = sola_nl_resume_camp();
       if ( is_wp_error($sola_nl_check) ) { sola_return_error($sola_nl_check); }
       else {
-        $newurl = site_url()."/wp-admin/admin.php?page=sola-nl-menu";
+        $newurl = admin_url("admin.php?page=sola-nl-menu");
         ob_end_clean();
         header("location:".$newurl);
       }
@@ -881,12 +905,12 @@ function sola_nl_wp_head() {
       $sola_nl_check = sola_nl_add_camp();
       if ( is_wp_error($sola_nl_check) ) { sola_return_error($sola_nl_check); }
       else  {
-          if(isset($_POST['campaign_type']) && $_POST['campaign_type'] == '3'){
-            $template_page = site_url()."/wp-admin/admin.php?page=sola-nl-menu&action=custom_template&camp_id=$sola_nl_check";
+        check_admin_referer('sola_nl_create_camp');
+          if(isset($_POST['campaign_type']) && intval($_POST['campaign_type']) == 3){
+            $template_page = admin_url("admin.php?page=sola-nl-menu&action=custom_template&camp_id=$sola_nl_check");
           } else {
-            $template_page = site_url()."/wp-admin/admin.php?page=sola-nl-menu&action=theme&camp_id=$sola_nl_check";
+            $template_page = admin_url("admin.php?page=sola-nl-menu&action=theme&camp_id=$sola_nl_check");
           }
-         //$new_camp_page = site_url()."/wp-admin/admin.php?page=sola-nl-menu&action=editor&camp_id=$sola_nl_check";
          ob_end_clean();
          header("location:".$template_page);
          exit();
@@ -896,7 +920,7 @@ function sola_nl_wp_head() {
        $sola_nl_check = sola_nl_update_camp();
       if ( is_wp_error($sola_nl_check) ) { sola_return_error($sola_nl_check); }
         else {
-         $new_camp_page = site_url()."/wp-admin/admin.php?page=sola-nl-menu&action=editor&camp_id=".$_POST["camp_id"];
+         $new_camp_page = admin_url("admin.php?page=sola-nl-menu&action=editor&camp_id=".intval($_POST["camp_id"]) );
          ob_end_clean();
          header("location:".$new_camp_page);
          exit();
@@ -910,7 +934,7 @@ function sola_nl_wp_head() {
 //           echo "<div id=\"message\" class=\"updated\"><p>".__("Campaign Ready to Send","sola")."</p></div>";
 //       }
 //   }
-    if(isset($_POST['action']) && $_POST["action"] == "sola-delete-subs" && isset($_POST['sola_check_subs']) && $_POST['sola_check_subs']){
+    if(isset($_POST['action']) && $_POST["action"] == "sola-delete-subs" && isset($_POST['sola_check_subs']) && isset($_POST['sola_check_subs'])){
         foreach($_POST['sola_check_subs'] as $sub_id){
             $sola_nl_check = sola_nl_delete_subscriber($sub_id);
             if ( is_wp_error($sola_nl_check) ) {
@@ -965,11 +989,11 @@ function sola_nl_wp_head() {
             $theme_array = explode(",",$_POST['theme_id']);
 
 
-            $sola_nl_check = sola_set_theme($theme_array, $_POST['camp_id']);
+            $sola_nl_check = sola_set_theme($theme_array, intval($_POST['camp_id']));
             if(is_wp_error($sola_nl_check)){
                 sola_return_error($sola_nl_check);
             } else {
-                $editor = site_url()."/wp-admin/admin.php?page=sola-nl-menu&action=editor&camp_id=".$_POST["camp_id"];
+                $editor = admin_url("admin.php?page=sola-nl-menu&action=editor&camp_id=".intval($_POST["camp_id"]) );
                 header('location:'.$editor);
                 exit();
             }
@@ -1007,9 +1031,7 @@ function sola_nl_admin_menu_layout() {
     global $sola_nl_success;
     global $sola_nl_error;
 
-
     if ($_GET['page'] == "sola-nl-menu" && !isset($_GET['action'])) {
-
         if(get_option('solag_nl_first_time')){
             update_option('solag_nl_first_time', false);
             if (class_exists("APC_Object_Cache")) {
@@ -1312,7 +1334,7 @@ function sola_nl_add_sub_list($list_ids, $sub_id){
    global $sola_nl_subs_list_tbl;
    $wpdb->delete( $sola_nl_subs_list_tbl, array( 'sub_id' => $sub_id )); // Delete all assciated to this subscriber
 
-   if($list_ids!==null)
+   if($list_ids!==null && !is_string($list_ids))
    {
        foreach($list_ids as $list_id){
         $wpdb->insert( $sola_nl_subs_list_tbl, array( 'id' => '', 'list_id' => $list_id, 'sub_id' => $sub_id)); // add each one again
@@ -1374,14 +1396,17 @@ function sola_nl_get_subscriber($sub_id){
 function sola_nl_update_subscriber(){
    global $wpdb;
    global $sola_nl_subs_tbl;
-   sola_nl_add_sub_list($_POST['sub_list'], $_POST['sub_id']);
+   /**
+    * sanitize_text_field removed from $_POST['sub_list'] as an array is parsed through here
+    */
+   sola_nl_add_sub_list($_POST['sub_list'], intval($_POST['sub_id']));
    if ($wpdb->update(
       $sola_nl_subs_tbl,
       array(
-         'sub_email' => $_POST['sub_email'],
-         'sub_name' => $_POST['sub_name']
+         'sub_email' => sanitize_email($_POST['sub_email']),
+         'sub_name' => sanitize_text_field($_POST['sub_name'])
       ),
-      array( 'sub_id' => $_POST['sub_id'] ),
+      array( 'sub_id' => intval($_POST['sub_id']) ),
       array(
          '%s',
          '%s'
@@ -1424,10 +1449,10 @@ function sola_nl_update_list(){
    if ($wpdb->update(
       $sola_nl_list_tbl,
       array(
-         'list_name' => $_POST['list_name'],
-         'list_description' => $_POST['list_description']
+         'list_name' => sanitize_text_field($_POST['list_name']),
+         'list_description' => sanitize_text_field($_POST['list_description'])
       ),
-      array( 'list_id' => $_POST['list_id'] ),
+      array( 'list_id' => intval($_POST['list_id']) ),
       array(
          '%s',
          '%s'
@@ -1481,7 +1506,7 @@ function sola_nl_update_settings(){
    if(!$sola_nl_browser_text){
        $sola_nl_browser_text = __("Not Displaying? View In Browser", "sola");
    }
-   if (isset($_POST['sola_nl_api'])) { update_option("sola_nl_api",$_POST['sola_nl_api']); }
+   if (isset($_POST['sola_nl_api'])) { update_option("sola_nl_api",sanitize_text_field($_POST['sola_nl_api'])); }
    update_option("sola_nl_email_note", $sola_nl_email_note);
    update_option("sola_nl_notifications", $sola_nl_notifications);
    //Signiture needs to be added
@@ -1562,9 +1587,9 @@ function sola_nl_add_camp(){
    if(isset($subject) && $subject){
       if((isset($sub_list) && $sub_list) || $campaign_type == 2){
 
-        $custom_time = $_POST['sola_nl_time'];
-        $day = $_POST['sola_nl_days'];
-        $type =  $_POST['sola_nl_time_slot'];
+        $custom_time = sanitize_text_field($_POST['sola_nl_time']);
+        $day = intval($_POST['sola_nl_days']);
+        $type =  intval($_POST['sola_nl_time_slot']);
         $the_current_time = current_time('timestamp');
 
         if($type == 1){
@@ -1768,9 +1793,9 @@ function sola_nl_update_camp(){
          if ($wpdb->update(
             $sola_nl_camp_tbl,
             array(
-               'subject' => $_POST['subject']
+               'subject' => sanitize_text_field($_POST['subject'])
             ),
-            array( 'camp_id' => $_POST['camp_id'] ),
+            array( 'camp_id' => intval($_POST['camp_id']) ),
             array(
                '%s'
             ),
@@ -2228,7 +2253,7 @@ function sola_nl_get_font_family_id($font_family){
 function sola_nl_confirm_link($atr , $text = null){
     global $wpdb;
     global $sola_nl_subs_tbl;
-    $sub_email = $_POST["sub_email"];
+    $sub_email = sanitize_email($_POST["sub_email"]);
     $sql = "SELECT * FROM `$sola_nl_subs_tbl` WHERE `sub_email` = '$sub_email'";
     $result = $wpdb->get_row($sql);
     $sub_key =  $result->sub_key;
@@ -2288,7 +2313,7 @@ function sola_nl_unsubscribe_href(){
     else if( isset($_GET['sub_id']) ) {
         if ($_GET['sub_id'] == "0") { /* came from "preview" link in admin */ return ""; }
         else {
-            $subscriber = sola_nl_get_subscriber($_GET['sub_id']);
+            $subscriber = sola_nl_get_subscriber(intval($_GET['sub_id']));
             $sub_key = $subscriber->sub_key;
         }
     }
@@ -2321,13 +2346,13 @@ function sola_nl_view_browser(){
 
     if(isset($_POST['subscriber'])){
         extract($_POST['subscriber']);
-        return SITE_URL."/?action=sola_nl_browser&camp_id=".$_POST['camp_id']."&sub_id=".$sub_id;
+        return site_url("?action=sola_nl_browser&camp_id=".intval($_POST['camp_id'])."&sub_id=".$sub_id);
     } else if (isset($sola_global_subid)) {
-        return SITE_URL."/?action=sola_nl_browser&camp_id=".$sola_global_campid."&sub_id=".$sola_global_subid;
-    } else if (isset($_GET['camp_id']) && (isset($_GET['sub_id']) && $_GET['sub_id'] == 0)) {
-        return SITE_URL."/?action=sola_nl_browser&camp_id=".$sola_global_campid."&sub_id=".$sola_global_subid;
+        return site_url("?action=sola_nl_browser&camp_id=".$sola_global_campid."&sub_id=".$sola_global_subid);
+    } else if (isset($_GET['camp_id']) && (isset($_GET['sub_id']) && intval($_GET['sub_id']) == 0)) {
+        return site_url("?action=sola_nl_browser&camp_id=".$sola_global_campid."&sub_id=".$sola_global_subid);
     } else {
-        return SITE_URL."/?action=sola_nl_browser&camp_id=".$sola_global_campid;
+        return site_url("?action=sola_nl_browser&camp_id=".$sola_global_campid);
     }
 }
 function sola_return_error($data) {
@@ -2335,16 +2360,11 @@ function sola_return_error($data) {
     sola_write_to_error_log($data);
 }
 function sola_write_to_error_log($data) {
+    $upload_dir = wp_upload_dir();
     if (sola_nl_error_directory()) {
-        if (is_multisite()) {
-            $content = "\r\n".date("Y-m-d H:i:s").": ".$data->get_error_message() . " -> ". $data->get_error_data();
-            $fp = fopen($upload_dir['basedir'].'/sola'."/sola_error_log.txt","a+");
-            fwrite($fp,$content);
-        } else {
-            $content = "\r\n".date("Y-m-d H:i:s").": ".$data->get_error_message() . " -> ". $data->get_error_data();
-            $fp = fopen(ABSPATH.'wp-content/uploads/sola'."/sola_error_log.txt","a+");
-            fwrite($fp,$content);
-        }
+        $content = "\r\n".date("Y-m-d H:i:s").": ".$data->get_error_message() . " -> ". $data->get_error_data();
+        $fp = fopen($upload_dir['basedir'].'/sola'."/sola_error_log.txt","a+");
+        fwrite($fp,$content);
     }
 
     error_log(date("Y-m-d H:i:s"). ": ".SOLA_PLUGIN_NAME . ": " . $data->get_error_message() . "->" . $data->get_error_data());
@@ -2353,29 +2373,22 @@ function sola_write_to_error_log($data) {
 function sola_nl_error_directory() {
     $upload_dir = wp_upload_dir();
 
-    if (is_multisite()) {
-        if (!file_exists($upload_dir['basedir'].'/sola')) {
-            wp_mkdir_p($upload_dir['basedir'].'/sola');
-$content = "Error log created";
-            $fp = fopen($upload_dir['basedir'].'/sola'."/sola_error_log.txt","w+");
-            fwrite($fp,$content);
-        }
-    } else {
-        if (!file_exists(ABSPATH.'wp-content/uploads/sola')) {
-            wp_mkdir_p(ABSPATH.'wp-content/uploads/sola');
-$content = "Error log created";
-            $fp = fopen(ABSPATH.'wp-content/uploads/sola'."/sola_error_log.txt","w+");
-            fwrite($fp,$content);
-        }
-
+    if (!file_exists($upload_dir['basedir'].'/sola')) {
+        wp_mkdir_p($upload_dir['basedir'].'/sola');
+        $content = "Error log created";
+        $fp = fopen($upload_dir['basedir'].'/sola'."/sola_error_log.txt","w+");
+        fwrite($fp,$content);
     }
+
     return true;
 
 }
 
 function sola_nl_return_error_log() {
-    $fh = @fopen(ABSPATH.'wp-content/uploads/sola'."/sola_error_log.txt","r");
-    $filesize = filesize(ABSPATH.'wp-content/uploads/sola'."/sola_error_log.txt");
+    $upload_dir = wp_upload_dir();
+
+    $fh = @fopen($upload_dir['basedir'] . '/sola'."/sola_error_log.txt","r");
+    $filesize = @filesize($upload_dir['basedir'] + '/sola'."/sola_error_log.txt");
     if (!$filesize || $filesize == 0 || $filesize > 16384) { $filesize = 16384; }
     $ret = "";
     if ($fh) {
@@ -2501,6 +2514,11 @@ function sola_set_theme($theme_array, $camp_id) {
 
     /* change reference of ../ and ./ to the actual URL of the theme */
     $theme_html = $theme_data['html'];
+
+    sola_nl_register_template_shortcode("sola_nl_theme_url", $theme_url); //Replace the default url with the themes url
+    
+    $theme_html = apply_filters("sola_nl_filter_theme_html_before_insert", $theme_html);
+
     $theme_html = str_replace("../", $site_url, $theme_html);
     $theme_html = str_replace("./", $site_url, $theme_html);
 
@@ -2564,7 +2582,7 @@ function sola_nl_init_post_processing(){
             $fh = @fopen( 'php://output', 'w' );
             $query = "SELECT * FROM `{$wpdb->prefix}sola_nl_subscribers`";
             $results = $wpdb->get_results( $query, ARRAY_A );
-            $headerDisplayed = false;
+            $headerDisplayed = true;
             foreach ( $results as $data ) {
                 // Add a header row if it hasn't been added yet
                 if ( !$headerDisplayed ) {
@@ -2581,10 +2599,10 @@ function sola_nl_init_post_processing(){
             die();
         }
         if ($_GET['action'] == 'sola_nl_tracker') {
-            sola_nl_tracker($_GET['camp_id'], $_GET['sub_id']);
+            sola_nl_tracker(intval($_GET['camp_id']), intval($_GET['sub_id']));
         }
         if ($_GET['action'] == 'sola_nl_browser') {
-            $camp = sola_nl_get_camp_details($_GET['camp_id']);
+            $camp = sola_nl_get_camp_details(intval($_GET['camp_id']));
             if($camp->action == 3){
 
                 global $sola_global_campid;
@@ -2604,9 +2622,9 @@ function sola_nl_init_post_processing(){
 
                 die();
             } else {
-                $letter = sola_nl_get_letter($_GET['camp_id']);
-                if (isset($_GET['sub_id'])) { $sub_id = $_GET['sub_id']; } else { $sub_id = 0; }
-                echo do_shortcode(sola_nl_mail_body($letter, $sub_id, $_GET['camp_id']));
+                $letter = sola_nl_get_letter(intval($_GET['camp_id']));
+                if (isset($_GET['sub_id'])) { $sub_id = intval($_GET['sub_id']); } else { $sub_id = 0; }
+                echo do_shortcode(sola_nl_mail_body($letter, $sub_id, intval($_GET['camp_id'])));
                 die();
             }
         }
@@ -3416,8 +3434,8 @@ function sola_nl_admin_extensions(){
 
     ?>
     <h2 class="nav-tab-wrapper">
-        <a href="admin.php?page=sola-nl-extensions" title="<?php _e("Add-ons","sola"); ?>" class="nav-tab <?php echo $normal; ?>"><?php _e("Add-ons","sola"); ?></a>
-        <a href="admin.php?page=sola-nl-extensions&type=additional" title="<?php _e("Suggested Plugins","sola"); ?>" class="nav-tab  <?php echo $additional; ?>"><?php _e("Suggested Plugins","sola"); ?></a>
+        <a href="<?php echo admin_url('admin.php?page=sola-nl-extensions'); ?>" title="<?php _e("Add-ons","sola"); ?>" class="nav-tab <?php echo $normal; ?>"><?php _e("Add-ons","sola"); ?></a>
+        <a href="<?php echo admin_url('admin.php?page=sola-nl-extensions&type=additional'); ?>" title="<?php _e("Suggested Plugins","sola"); ?>" class="nav-tab  <?php echo $additional; ?>"><?php _e("Suggested Plugins","sola"); ?></a>
         <span style='float: right; bottom:-5px; position: relative;'><img src='<?php echo plugins_url('/images/codecabin.png', __FILE__); ?>' style="height:15px;" /></span>
     </h2> 
     <div id="tab_container">
@@ -3477,15 +3495,15 @@ function sola_nl_admin_extensions(){
 
         echo "<p><div style='display:block; overflow:auto; clear:both;'>";
         echo "<strong>".__("Price:","sola")."</strong> ";
-        echo "<a href='admin.php?page=sola-nl-extensions&filter1=all&filter2=".$filter2."' $filter1_all_style>".__("All","sola")."</a> |";
-        echo "<a href='admin.php?page=sola-nl-extensions&filter1=free&filter2=".$filter2."' $filter1_free_style>".__("Free","sola")."</a> |";
-        echo "<a href='admin.php?page=sola-nl-extensions&filter1=paid&filter2=".$filter2."' $filter1_paid_style>".__("Paid","sola")."</a>";
+        echo "<a href='" . admin_url("admin.php?page=sola-nl-extensions&filter1=all&filter2=".$filter2) ."' $filter1_all_style>".__("All","sola")."</a> |";
+        echo "<a href='" . admin_url("admin.php?page=sola-nl-extensions&filter1=free&filter2=".$filter2) ."' $filter1_free_style>".__("Free","sola")."</a> |";
+        echo "<a href='" . admin_url("admin.php?page=sola-nl-extensions&filter1=paid&filter2=".$filter2) ."' $filter1_paid_style>".__("Paid","sola")."</a>";
         echo "</div></p>";
         echo "<p><div style='display:block; overflow:auto; clear:both;'>";
         echo "<strong>".__("For:","sola")."</strong> ";
-        echo "<a href='admin.php?page=sola-nl-extensions&filter2=all&filter1=".$filter1."' $filter2_both_style>".__("Both","sola")."</a> |";
-        echo "<a href='admin.php?page=sola-nl-extensions&filter2=free&filter1=".$filter1."' $filter2_free_style>".__("Free version","sola")."</a> |";
-        echo "<a href='admin.php?page=sola-nl-extensions&filter2=pro&filter1=".$filter1."' $filter2_pro_style>".__("Pro version","sola")."</a>";
+        echo "<a href='" . admin_url("admin.php?page=sola-nl-extensions&filter2=all&filter1=".$filter1) ."' $filter2_both_style>".__("Both","sola")."</a> |";
+        echo "<a href='" . admin_url("admin.php?page=sola-nl-extensions&filter2=free&filter1=".$filter1) ."' $filter2_free_style>".__("Free version","sola")."</a> |";
+        echo "<a href='" . admin_url("admin.php?page=sola-nl-extensions&filter2=pro&filter1=".$filter1) ."' $filter2_pro_style>".__("Pro version","sola")."</a>";
         echo "</div></p>";
 
 
@@ -3537,3 +3555,4 @@ function sola_nl_admin_extensions(){
     </div>
     <?php
 }
+

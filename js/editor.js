@@ -245,7 +245,7 @@ jQuery(document).ready( function() {
         stop:function(event,ui)
         {
             jQuery("#sola_nl_save_text").empty();
-            jQuery(".header-right").css("background", "url('../wp-content/plugins/sola-newsletters/images/editor-header.jpg') center no-repeat");
+            jQuery(".header-right").css("background", "url("+editor_header_image_url+") center no-repeat");
             if (typeof jQuery(ui.helper).attr('type') !== 'undefined' && jQuery(ui.helper).attr('type') === 'table') {
             } else {
               return jQuery('<div>').addClass('editable').text('Drag to the newsletter');

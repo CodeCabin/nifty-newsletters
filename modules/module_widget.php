@@ -1,4 +1,6 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 // Creating the widget 
 class sola_nl_widget extends WP_Widget {
 
@@ -60,6 +62,8 @@ function sola_nl_wp_js(){
     wp_enqueue_script( 'jquery' );
     wp_register_script('sola_nl_subs_widget', PLUGIN_DIR."/js/subscribe_widget.js", false);
     wp_enqueue_script( 'sola_nl_subs_widget' );
+
+    wp_localize_script('sola_nl_subs_widget', 'sola_nl_loader_gif_url', PLUGIN_DIR . "/images/loading.gif");
 }
 
 

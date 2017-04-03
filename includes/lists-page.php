@@ -4,7 +4,7 @@
    <div id="icon-edit" class="icon32 icon32-posts-post"><br></div>
    <h2>
       <?php _e("My Lists","sola") ?>
-       <a href="?page=sola-nl-menu&action=new_list" class="add-new-h2"><?php _e("Add List","sola") ?></a>
+       <a href="<?php echo wp_nonce_url('?page=sola-nl-menu&action=new_list', 'sola_nl_new_list'); ?>" class="add-new-h2"><?php _e("Add List","sola") ?></a>
    </h2>
    <table class="wp-list-table widefat fixed">
       <thead>
@@ -21,15 +21,16 @@
                <tr>
                   <td>
                      <strong>
-                        <a href="?page=sola-nl-menu&action=new_list&list_id=<?php echo $list->list_id ?>">
+                        <a href="<?php echo wp_nonce_url('?page=sola-nl-menu&action=new_list&list_id=' . $list->list_id, 'sola_nl_new_list'); ?>">
                            <?php echo $list->list_name; ?>
                         </a>
                      </strong>
                      <div class="row-actions">
                         <span>
-                           <a href="?page=sola-nl-menu&action=new_list&list_id=<?php echo $list->list_id ?>">
-                              <?php _e("Edit","sola"); ?>
-                           </a>
+                           
+                              <a href="<?php echo wp_nonce_url('?page=sola-nl-menu&action=new_list&list_id=' . $list->list_id, 'sola_nl_new_list'); ?>">
+                                 <?php _e("Edit","sola");?>
+                             </a>
                         </span> | 
                         <span>
                            <a href="?page=sola-nl-menu-subscribers&list_id=<?php echo $list->list_id ?>">

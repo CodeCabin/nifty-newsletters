@@ -3,7 +3,7 @@ Contributors: SolaPlugins, NickDuncan, CodeCabin_, Jarryd Long
 Donate link: http://solaplugins.com
 Tags: newsletter, newsletters, email newsletters, email newsletter, email subscription, email, emailing, email signup, newsletter signup, newsletter widget, subscribe widget, subscribers, newsletter widget, email newsletter, newsletter builder, automatic post notification, auto post notifications, autoresponder, autoresponders, auto-responder, post notification, automatic newsletter
 Requires at least: 3.6
-Tested up to: 4.5.2
+Tested up to: 4.7.2
 Stable tag: trunk
 License: GPLv2
 
@@ -123,10 +123,26 @@ Nifty Newsletters strongly suggests that you follow the CAN-SPAM Act. We have in
 
 == Upgrade Notice ==
 
-Not applicable.
+= 4.0.17 =
+Please update to this version as it contains several security improvements
 
 == Changelog ==
 
+= 4.0.18 - 2017-04-03 - Medium priority =
+* Fixed bugs that caused the 'Are you sure you want to do this?' when performing some actions
+* PHP Warnings fixed 
+* Replaced a deprecated function on the feedback page
+ 
+= 4.0.17 - 2017-02-24 - High priority =
+* Further changes regarding security issues
+
+= 4.0.16 - 2017-02-21 - High Priority =
+* Secuirty Improvements
+* Changed the way theme templates load images
+* Canged the way JS files load images (localized)
+
+= 4.0.15 - 2017-02-17 - High Priority =
+* PHPMailer Removed from the plugin
 
 = 4.0.14 - 2016-05-12 - Medium priority =
 * Fixed a bug that was experienced on some servers that caused multiple emails to be sent to users when a previous email failed

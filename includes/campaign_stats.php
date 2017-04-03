@@ -1,4 +1,15 @@
-<?php $camp_id = $_GET['camp_id'];
+<?php 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+/**
+ * Removed as WP3.2 doesnt like this
+ */
+// check_admin_referer();
+if(!current_user_can("manage_options")){
+    exit;
+}
+
+$camp_id = intval($_GET['camp_id']);
  
 $result = sola_nl_get_camp_details($camp_id);
 $links_array = sola_nl_camp_links($camp_id);
@@ -63,7 +74,7 @@ tr.even {
                                     <h4><?php _e("Lists Used:","sola"); ?></h4>
                                     <ul>
                                         <?php foreach($lists as $list){
-                                            echo "<li><a href='admin.php?page=sola-nl-menu-subscribers&list_id=".$list->list_id."' title='".$list->list_name." - View Subscribers'>".$list->list_name."</a></li>";
+                                            echo "<li><a href='" . admin_url("admin.php?page=sola-nl-menu-subscribers&list_id=".$list->list_id) . "' title='".$list->list_name." - View Subscribers'>".$list->list_name."</a></li>";
                                         }?>
                                     </ul>
                                 </div>
@@ -82,17 +93,17 @@ tr.even {
                         <div class="alert" style="background-color: #FFF; text-align: center;">   
                             <?php $mails_sent = sola_nl_get_camp_stats($camp_id,'', true); ?>
                             <?php $mails_send_errors = sola_nl_get_camp_stats($camp_id,9, true); ?>
-                            <h2><a href="admin.php?page=sola-nl-menu&action=single_sub_stats&camp_id=<?php echo $camp_id; ?>&sent=<?php echo $mails_sent; ?>"><?php echo $mails_sent; ?></a></h2>
+                            <h2><a href="<?php echo admin_url('admin.php?page=sola-nl-menu&action=single_sub_stats&camp_id=' . $camp_id . '&sent=' . $mails_sent); ?>"><?php echo $mails_sent; ?></a></h2>
                             <p><?php _e("Total Emails Sent","sola"); ?></p>
                             
-                            <p><a href="admin.php?page=sola-nl-menu&action=single_sub_stats&camp_id=<?php echo $camp_id; ?>&n_sent=<?php echo $mails_send_errors; ?>"><?php echo $mails_send_errors; ?> <?php _e("error","sola"); ?></a></p>
+                            <p><a href="<?php echo admin_url('admin.php?page=sola-nl-menu&action=single_sub_stats&camp_id=' . $camp_id . '&n_sent=' . $mails_send_errors); ?>"><?php echo $mails_send_errors; ?> <?php _e("error","sola"); ?></a></p>
                         </div>    
                     </div>
                     <div class="col-sm-3">
                         <div class="alert" style="background-color: #FFF; text-align: center;"> 
                             <?php if(function_exists('sola_nl_register_pro_version')){ ?>
                             <?php $get_total_opens = sola_nl_get_total_opens($camp_id, ''); ?>
-                            <h2><a href="admin.php?page=sola-nl-menu&action=single_sub_stats&camp_id=<?php echo $camp_id; ?>&opened=<?php echo $get_total_opens; ?>"><?php echo $get_total_opens; ?></a></h2>
+                            <h2><a href="<?php echo admin_url('admin.php?page=sola-nl-menu&action=single_sub_stats&camp_id=' . $camp_id . '&opened=' . $get_total_opens); ?>"><?php echo $get_total_opens; ?></a></h2>
                             <?php } else { ?>
                             <h4><?php _e('Go','sola')?> <a target='_BLANK' href='http://solaplugins.com/plugins/sola-newsletters/?utm_source=plugin&utm_medium=link&utm_campaign=stats_opens' style='color:#EC6851;'><?php _e('Premium','sola')?> </a><?php _e('to get these stats and more!','sola')?></h4>
                             <?php } ?>
@@ -102,7 +113,7 @@ tr.even {
                     <div class="col-sm-3">
                         <div class="alert" style="background-color: #FFF; text-align: center;">
                             <?php if(function_exists('sola_nl_register_pro_version')){ ?>
-                            <h2><a href="admin.php?page=sola-nl-menu&action=single_sub_stats&camp_id=<?php echo $camp_id; ?>&opened=<?php echo $stats['opens']; ?>"><?php echo $stats['opens']; ?></a></h2>                            
+                            <h2><a href="<?php echo admin_url('admin.php?page=sola-nl-menu&action=single_sub_stats&camp_id=' . $camp_id . '&opened=' . $stats['opens']); ?>"><?php echo $stats['opens']; ?></a></h2>                            
                             <?php } else { ?>
                             <h4><?php _e('Go','sola')?> <a target='_BLANK' href='http://solaplugins.com/plugins/sola-newsletters/?utm_source=plugin&utm_medium=link&utm_campaign=stats_opens' style='color:#EC6851;'><?php _e('Premium','sola')?> </a><?php _e('to get these stats and more!','sola')?></h4>
                             <?php } ?>
@@ -113,7 +124,7 @@ tr.even {
                         <div class="alert" style="background-color: #FFF; text-align: center;">                              
                             <?php if(function_exists('sola_nl_register_pro_version')){ ?>
                             <?php $clicks = sola_nl_get_link_clcks('',$camp_id); ?>
-                            <h2><a href="admin.php?page=sola-nl-menu&action=single_sub_stats&camp_id=<?php echo $camp_id; ?>&clicks=<?php echo $clicks; ?>"><?php echo $clicks; ?></a></h2>
+                            <h2><a href="<?php echo admin_url('admin.php?page=sola-nl-menu&action=single_sub_stats&camp_id=' . $camp_id . '&clicks=' . $clicks); ?>"><?php echo $clicks; ?></a></h2>
                             <?php } else { ?>
                             <h4><?php _e('Go','sola')?> <a target='_BLANK' href='http://solaplugins.com/plugins/sola-newsletters/?utm_source=plugin&utm_medium=link&utm_campaign=stats_opens' style='color:#EC6851;'><?php _e('Premium','sola')?> </a><?php _e('to get these stats and more!','sola')?></h4>
                             <?php } ?>

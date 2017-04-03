@@ -1,15 +1,84 @@
-<?php $notification = get_option("sola_nl_notifications"); ?>
-<?php
+<?php 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+/**
+ * Removed as WP3.2 doesn't like this
+ */
+// check_admin_referer();
+if(!current_user_can("manage_options")){
+    exit;
+}
+
+$notification = get_option("sola_nl_notifications"); 
 $sola_nl_ajax_nonce = wp_create_nonce("sola_nl");
-
-
 ?>
 
 <script language="javascript">
     var sola_nl_nonce = '<?php echo $sola_nl_ajax_nonce; ?>';
 </script>
+
 <style>
- label { font-weight: bolder; }    
+ label { font-weight: bolder; }  
+ #sola_tabs .ui-tabs-nav {
+    padding:0; 
+    height:30px;  
+}
+
+#sola_tabs .ui-tabs-nav {
+    border-bottom: 1px solid #000;
+}
+#sola_tabs .ui-tabs-panel{
+    padding:0;
+}
+#sola_tabs .ui-tabs-panel table {
+/*    border: 1px solid #E7e7e7;
+    width: 100%;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;*/
+    padding: 5px;
+}
+#sola_tabs .ui-state-default{
+background-color: #0073aa;
+border-top-left-radius: 5px;
+border-top-right-radius: 5px;
+height: 29px;
+padding: 0px 20px;
+line-height: 30px;
+}
+#sola_tabs .ui-state-default a{
+    color:#FFFFFF;
+    text-decoration:none;
+}
+#sola_tabs .ui-state-default a:hover{
+    color:#FFFFFF;
+    text-decoration:none;    
+    cursor: pointer;
+}
+
+#sola_tabs .ui-state-active a:hover{
+    cursor: pointer;
+    color: #0073aa;
+}
+#sola_tabs .ui-state-active {
+    background-color: #fff;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-left: 1px solid #303E48;
+    border-top: 1px solid #303E48;  
+    border-right: 1px solid #303E48;    
+    height: 28px;
+}
+#sola_tabs .ui-state-active a{
+    color:#0073aa;
+}
+#sola_tabs .ui-tabs-nav {
+    text-align: center;
+}
+#sola_tabs .ui-tabs-nav li {
+    float: none !important;
+    display: inline-block;
+}  
 </style>
 <div class="wrap">
    
@@ -19,7 +88,7 @@ $sola_nl_ajax_nonce = wp_create_nonce("sola_nl");
 
     <form action='' name='sola_settings' method='POST' id='sola_nl_settings'>
 
-    <div id="sola_tabs">
+    <div id="sola_tabs" class="ui-tabs-nav">
       <ul>
           <li><a href="#tabs-1"><?php _e("Main Settings","sola") ?></a></li>
           <li><a href="#tabs-2"><?php _e("E-mail Settings","sola") ?></a></li>
@@ -34,8 +103,8 @@ $sola_nl_ajax_nonce = wp_create_nonce("sola_nl");
             <table width='100%'>
          
                 <?php if (function_exists("sola_nl_premium_activate")) { ?>
-                <tr>
-                    <td width="250px" valign="top" >
+                <tr class="row">
+                    <td width="250px" valign="top" class="col-sm-8">
                         <label><?php _e('API Key', 'sola'); ?></label>
                             <p class="description" style='padding:10px;'><?php _e('Enter your Sola Newsletters Premium API key', 'sola'); ?></p>
                     </td>
@@ -344,7 +413,7 @@ $sola_nl_ajax_nonce = wp_create_nonce("sola_nl");
                 <tr>
                     <td width="40%" style='min-width:350px;'>
                         <p class="description" style='padding:10px;'>
-                            <?php _e("This is to test your mail settings. If you don't receive a mail, your settings maybe incorrect. Please also check your SPAM folder.","sola"); ?>
+                            <?php _e("This is to test your mail settings. If you don't receive a mail, your settings may be incorrect. Please also check your SPAM folder.","sola"); ?>
                         </p>
                     </td>
                     <td>
@@ -481,7 +550,7 @@ $sola_nl_ajax_nonce = wp_create_nonce("sola_nl");
                     sola_nl_analytics_settings_page_pro();
                 } else {
             ?>
-                    <p><h2 class="text-center" ><?php _e('Upgrade to the','sola')?> <a target='_BLANK' href='http://solaplugins.com/plugins/sola-newsletters/?utm_source=plugin&utm_medium=link&utm_campaign=analytics' style='color:#EC6851;'><?php _e('Premium version','sola')?> </a><?php _e('to integrate your Sola Newsletters with Google Analytics.','sola')?></h2></p>
+                    <p><h2 class="text-center" ><?php _e('Upgrade to the','sola')?> <a target='_BLANK' href='http://solaplugins.com/plugins/sola-newsletters/?utm_source=plugin&utm_medium=link&utm_campaign=analytics' style='color:#0073aa;'><?php _e('Premium version','sola')?> </a><?php _e('to integrate your Sola Newsletters with Google Analytics.','sola')?></h2></p>
             <?php } ?>
             <?php do_action( 'sola_nl_analytics_settings_after' ); ?>
         </div>
@@ -527,27 +596,27 @@ $sola_nl_ajax_nonce = wp_create_nonce("sola_nl");
         
             <div id="tabs-8">
                 <center>
-                    <h1 style="font-size: 50px; font-weight: 300"><?php _e("Why Go","sola")?> <strong style="color: #ec6851;"><?php _e("Premium?","sola")?></strong></h1>
+                    <h1 style="font-size: 50px; font-weight: 300"><?php _e("Why Go","sola")?> <strong style="color: #0073aa;"><?php _e("Premium?","sola")?></strong></h1>
                 </center>
-                <div style="display: inline-block; width: 49%; border-right: solid 8px #ec6851;">
+                <div style="display: inline-block; width: 49%; border-right: solid 1px #d9d9d9;">
                     <center>
-                        <h1 style=" font-size: 35px; color: #ec6851"><?php _e('+2500 Subscribers', 'sola') ?></h1>
+                        <h1 style=" font-size: 35px; color: #333"><?php _e('+2500 Subscribers', 'sola') ?></h1>
                         <h2><?php _e('There are no limits on how many subscribers you can have or send to', 'sola') ?></h2>
                         <hr style="width: 90%; margin: 30px 0;"/>
-                        <h1 style=" font-size: 35px; color:#ec6851"><?php _e('More Themes', 'sola') ?></h1>
+                        <h1 style=" font-size: 35px; color:#333"><?php _e('More Themes', 'sola') ?></h1>
                         <h2><?php _e('Get more themes and styles to choose from to make your E-mails so much better', 'sola') ?></h2>
                     </center>
                 </div>
                 <div style="display: inline-block; width: 49%;">
                     <center>
-                        <h1 style=" font-size: 35px; color: #ec6851"><?php _e('Detailed Statistics', 'sola') ?></h1>
+                        <h1 style=" font-size: 35px; color: #333"><?php _e('Detailed Statistics', 'sola') ?></h1>
                         <h2><?php _e('Get insights on your subscribers - How many opens and what links were clicked', 'sola') ?></h2>
                         <hr style="width: 90%; margin: 30px 0;"/>
-                        <h1 style=" font-size: 35px; color:#ec6851"><?php _e('Google Analytics', 'sola') ?></h1>
+                        <h1 style=" font-size: 35px; color:#333"><?php _e('Google Analytics', 'sola') ?></h1>
                         <h2><?php _e('We have intergrated analytics so you can easily track traffic from emails to your site', 'sola') ?></h2>
                     </center>
                 </div>
-                <a target="_BLANK" href="http://solaplugins.com/plugins/sola-newsletters/?utm_source=plugin&utm_medium=link&utm_campaign=premium" title="Get Premium Version Now!" style="width: 50%; background-color: #EC6851; display: block; text-align: center; height: 60px; line-height: 60px; font-size: 30px; margin-top: 40px; color:#fff; border-color: #EC6851; margin-left:auto; margin-right:auto;" class="button"><?php _e('Get The Premium Version','sola') ?></a>
+                <a target="_BLANK" href="http://solaplugins.com/plugins/sola-newsletters/?utm_source=plugin&utm_medium=link&utm_campaign=premium" title="Get Premium Version Now!" style="width: 50%; background-color: #0073aa; display: block; text-align: center; height: 60px; line-height: 60px; font-size: 30px; margin-top: 40px; color:#fff; border-color: #0073aa; margin-left:auto; margin-right:auto;" class="button"><?php _e('Get The Premium Version','sola') ?></a>
             </div>
         <?php } ?>
         
