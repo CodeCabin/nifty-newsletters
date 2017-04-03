@@ -1,10 +1,22 @@
-<?php $camp_id = $_GET['camp_id']; 
+<?php 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+/**
+ * Removed as WP doesn't like this since WP 3.2
+ */
+// check_admin_referer();
+if(!current_user_can("manage_options")){
+    exit;
+}
+
+$camp_id = intval($_GET['camp_id']); 
 //$themes = sola_get_theme_basic();
+
 ?>
 <div class="wrap">    
     <div id="icon-edit" class="icon32 icon32-posts-post"><br></div>
     <h2><?php _e('Your Themes', "sola") ?>   </h2>
-    <form method="post" action="admin.php?page=sola-nl-menu&action=theme&camp_id=<?php echo $camp_id ?>">
+    <form method="post" action="<?php echo admin_url('admin.php?page=sola-nl-menu&action=theme&camp_id=' . $camp_id); ?>">
         <input type="hidden" value="<?php echo $camp_id ?>" name="camp_id">
         <div class="themes_wrapper">
               <?php sola_nl_theme_selection(); ?>

@@ -1,7 +1,14 @@
 <?php 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+check_admin_referer('sola_nl_duplicate_camp');
+if(!current_user_can("manage_options")){
+    exit;
+}
+
 if(isset($_GET['camp_id'])){
-    $camp = sola_nl_get_camp_details($_GET['camp_id']);
-    $letter = sola_nl_get_letter($_GET['camp_id']);
+    $camp = sola_nl_get_camp_details(intval($_GET['camp_id']));
+    $letter = sola_nl_get_letter(intval($_GET['camp_id']));
     global $wpdb;
     global $sola_nl_camp_tbl;
     $wpdb->insert($sola_nl_camp_tbl, array('camp_id'=>'', 'subject'=> $camp->subject, 'theme_id' => $camp->theme_id, 'email' => $letter ));

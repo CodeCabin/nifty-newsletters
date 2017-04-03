@@ -1,6 +1,16 @@
 <?php
-global $current_user;
-get_currentuserinfo();
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+/**
+ * Removed as WP3.2 doesn't like this
+ */
+// check_admin_referer();
+if(!current_user_can("manage_options")){
+    exit;
+}
+
+$current_user = wp_get_current_user();
+
 ?><div class="wrap">
    
     

@@ -202,13 +202,13 @@ hr{
     padding: 5px;
 }
 
-#sola_tabs .ui-tabs-nav{
+#sola_tabs .ui-tabs-nav {
     padding:0; 
     height:30px;  
 }
 
 #sola_tabs .ui-tabs-nav {
-    border-bottom: 1px solid #EC6851;
+    border-bottom: 1px solid #000;
 }
 #sola_tabs .ui-tabs-panel{
     padding:0;
@@ -222,7 +222,7 @@ hr{
     padding: 5px;
 }
 #sola_tabs .ui-state-default{
-background-color: #EC6851;
+background-color: #0073aa;
 border-top-left-radius: 5px;
 border-top-right-radius: 5px;
 height: 29px;
@@ -241,7 +241,7 @@ line-height: 30px;
 
 #sola_tabs .ui-state-active a:hover{
     cursor: pointer;
-    color: #EC6851;
+    color: #0073aa;
 }
 #sola_tabs .ui-state-active {
     background-color: #fff;
@@ -253,7 +253,7 @@ line-height: 30px;
     height: 28px;
 }
 #sola_tabs .ui-state-active a{
-    color:#920506;
+    color:#0073aa;
 }
 #sola_tabs .ui-tabs-nav {
     text-align: center;

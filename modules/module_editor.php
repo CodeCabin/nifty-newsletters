@@ -1,5 +1,5 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 add_action('admin_print_scripts', 'sola_nl_admin_editor_scripts_basic');
 add_action('admin_enqueue_scripts', 'sola_nl_add_admin_editor_stylesheet');
@@ -25,6 +25,9 @@ function sola_nl_admin_editor_scripts_basic() {
             wp_enqueue_script( 'sola_nl_tinymce' );
             wp_register_script('sola_nl_editor', PLUGIN_DIR."/js/editor.js", false);
             wp_enqueue_script( 'sola_nl_editor' );
+
+            wp_localize_script('sola_nl_editor', 'editor_header_image_url', PLUGIN_DIR . "/images/editor-header.jpg");
+
             wp_register_script('sola_nl_color', PLUGIN_DIR."/js/colpick.js", false);
             wp_enqueue_script( 'sola_nl_color' );
             wp_register_script('sola_nl_bootstrap_js', PLUGIN_DIR."/js/bootstrap.min.js", false);

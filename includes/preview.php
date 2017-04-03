@@ -1,19 +1,30 @@
-<?php $camp = sola_nl_get_camp_details($_GET['camp_id']); ?>
+<?php 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+/**
+ * Removed due to WP 3.2 not liking this
+ */
+// check_admin_referer();
+if(!current_user_can("manage_options")){
+    exit;
+}
+
+$camp = sola_nl_get_camp_details(intval($_GET['camp_id'])); ?>
 
 <div id="icon-options-general" class="icon32 icon32-posts-post"><br></div><h2><?php _e("Live Preview","sola") ?></h2>
 
 <div class="preview_actions">
     <?php if($camp->type == '3'){ ?>
         <div class="return_editor">
-            <a title="<?php _e('Return To Editor', 'sola'); ?>" class="button-primary" href="admin.php?page=sola-nl-menu&action=custom_template&camp_id=<?php  echo $_GET['camp_id'] ?>"><?php _e('Return To Editor' ,'sola'); ?></a>
+            <a title="<?php _e('Return To Editor', 'sola'); ?>" class="button-primary" href="<?php echo admin_url('admin.php?page=sola-nl-menu&action=custom_template&camp_id=' . intval($_GET['camp_id']) ); ?>"><?php _e('Return To Editor' ,'sola'); ?></a>
         </div>
     <?php } else { ?>
     <div class="return_editor">
-        <a title="<?php _e('Return To Editor', 'sola'); ?>" class="button-primary" href="admin.php?page=sola-nl-menu&action=editor&camp_id=<?php  echo $_GET['camp_id'] ?>"><?php _e('Return To Editor' ,'sola'); ?></a>
+        <a title="<?php _e('Return To Editor', 'sola'); ?>" class="button-primary" href="<?php echo admin_url('admin.php?page=sola-nl-menu&action=editor&camp_id=' . intval($_GET['camp_id']) ); ?>"><?php _e('Return To Editor' ,'sola'); ?></a>
     </div>
     <?php } ?>
     <div class="confirm_camp">
-        <a title="<?php _e('Confirm Campaign', 'sola'); ?>" class="button-primary sola_nl_next_btn" href="admin.php?page=sola-nl-menu&action=confirm_camp&camp_id=<?php  echo $_GET['camp_id'] ?>"><?php _e('Confirm Campaign', 'sola'); ?></a>
+        <a title="<?php _e('Confirm Campaign', 'sola'); ?>" class="button-primary sola_nl_next_btn" href="<?php echo admin_url('admin.php?page=sola-nl-menu&action=confirm_camp&camp_id=' . intval($_GET['camp_id']) ); ?>"><?php _e('Confirm Campaign', 'sola'); ?></a>
     </div>
 </div>
 <div class="sola_nl_preview_container">    
@@ -43,7 +54,7 @@
                             echo trim($table);
                         }
                     } else {
-                        $letter = sola_nl_get_letter($_GET['camp_id']);
+                        $letter = sola_nl_get_letter(intval($_GET['camp_id']));
                         if ($letter){
                             echo trim($letter);
                         } else {

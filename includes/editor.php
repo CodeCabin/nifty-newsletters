@@ -1,6 +1,17 @@
 <?php 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+/**
+ * Removed as WP doesn't like this from WP3.2
+ */
+// check_admin_referer();
+if(!current_user_can("manage_options")){
+    exit;
+}
+
+
 $sola_nl_ajax_nonce = wp_create_nonce("sola_nl");
-$camp_details = sola_nl_get_camp_details($_GET['camp_id']);
+$camp_details = sola_nl_get_camp_details(intval($_GET['camp_id']));
 $theme_id = $camp_details->theme_id;
 if (isset($camp_details->theme_data)) {
     $theme_array = json_decode($camp_details->theme_data);
@@ -15,7 +26,7 @@ $styles = $camp_details->styles;
     var sola_nl_nonce = '<?php echo $sola_nl_ajax_nonce; ?>';
     var sola_is_editing = false;
     var sola_is_editing_id = null;
-    var camp_id = <?php echo $_GET['camp_id'] ?>;
+    var camp_id = <?php echo intval($_GET['camp_id']) ?>;
 </script>
 
 <?php
@@ -35,7 +46,7 @@ if(isset($camp_type['action'])) { $auto_camp_type = $camp_type['action']; } else
     <strong><?php _e("HTML","sola"); ?></strong><br />
     <textarea class='sola_nl_export_textarea_html' style='width:100%; height:25%;'></textarea><br />
 </div>
-<div class="sola-content-fixed">
+<div class="sola-content-fixed" style="z-index:100">
     <div class="sola-header-content ">        
         <div class="sola-sidebar-header">
             <ul>
@@ -395,7 +406,7 @@ if(isset($camp_type['action'])) { $auto_camp_type = $camp_type['action']; } else
 
 <div id="sola_newsletter_preview"> 
         <?php       
-            $letter = sola_nl_get_letter($_GET['camp_id'], $theme_id);
+            $letter = sola_nl_get_letter(intval($_GET['camp_id']), $theme_id);
             echo $letter;
         ?>
 </div>
@@ -410,7 +421,7 @@ if(isset($camp_type['action'])) { $auto_camp_type = $camp_type['action']; } else
 
 
 
-        <div id="sola_newsletter_wrapper"  camp_id="<?php echo $_GET['camp_id']?>">        
+        <div id="sola_newsletter_wrapper"  camp_id="<?php echo intval($_GET['camp_id']) ?>">        
                 
                 ?>        
         </div>
@@ -479,9 +490,9 @@ $sola_nl_ajax_nonce = wp_create_nonce("sola_nl");
 
 
 
-<div id="sola_newsletter_wrapper" style="float:left;" camp_id="<?php echo $_GET['camp_id']?>">        
+<div id="sola_newsletter_wrapper" style="float:left;" camp_id="<?php echo intval($_GET['camp_id']) ?>">        
         <?php 
-        $letter = sola_nl_get_letter($_GET['camp_id']);
+        $letter = sola_nl_get_letter(intval($_GET['camp_id']));
         if ($letter){
             echo $letter;
         } else {

@@ -1,4 +1,6 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 @session_start();
 // checks if any camps to send via ajax
 
@@ -187,7 +189,7 @@ function sola_nl_mail_body($body, $sub_id, $camp_id){
 </head>
 <body bgcolor="#e4e4e4" topmargin="0" leftmargin="0" marginheight="0" marginwidth="0" style="-webkit-font-smoothing: antialiased;width:100% !important;background:#e4e4e4;-webkit-text-size-adjust:none;">
     '.stripslashes($body).'
-    <img src="'.SITE_URL.'/?action=sola_nl_tracker&sub_id='.$sub_id.'&camp_id='.$camp_id.'" />
+    <img src="'.site_url('?action=sola_nl_tracker&sub_id='.$sub_id.'&camp_id='.$camp_id) .'" />
 
 </body>
 </html>';
@@ -263,7 +265,7 @@ function sola_nl_replace_links($body, $sub_id, $camp_id){
             $link_id = $wpdb->insert_id;
             //echo $old_href;
             if(isset($enable_link_tracking) && $enable_link_tracking){
-                $item->setAttribute('href', SITE_URL."?action=sola_nl_redirect&sola_link_id=".$link_id);
+                $item->setAttribute('href', site_url("?action=sola_nl_redirect&sola_link_id=".$link_id) );
             } else {
                 $item->setAttribute('href', $old_href);
             }
@@ -323,9 +325,17 @@ function sola_mail($camp_id,$to,$subject,$body,$headers = false,$attachment = fa
 
     } else if ($send_method >= "2") {
 
-        $file = PLUGIN_URL.'/includes/phpmailer/PHPMailerAutoload.php';
-        require_once $file;
-        $mail = new PHPMailer();
+         //Create a new PHPMailer instance
+
+        global $phpmailer; 
+ 
+        // (Re)create it, if it's gone missing
+        if ( ! ( $phpmailer instanceof PHPMailer ) ) {
+            require_once ABSPATH . WPINC . '/class-phpmailer.php';
+            require_once ABSPATH . WPINC . '/class-smtp.php';
+            $mail = new PHPMailer( true );
+        }
+
         $mail->IsSMTP();
         $mail->SMTPAuth = true;
 
@@ -664,9 +674,14 @@ function sola_cron_send($camp_id = false) {
                 $headers[] = 'Reply-To: '.$reply_name.' <'.$reply.'>';
 
             } else if ($saved_send_method >= "2") {
-                $file = PLUGIN_URL.'/includes/phpmailer/PHPMailerAutoload.php';
-                require_once $file;
-                $mail = new PHPMailer();
+                global $phpmailer; 
+     
+                // (Re)create it, if it's gone missing
+                if ( ! ( $phpmailer instanceof PHPMailer ) ) {
+                    require_once ABSPATH . WPINC . '/class-phpmailer.php';
+                    require_once ABSPATH . WPINC . '/class-smtp.php';
+                    $mail = new PHPMailer( true );
+                }
                 $mail->IsSMTP();
                 $mail->SMTPAuth = true;
                 $mail->SMTPKeepAlive = true;
@@ -898,9 +913,14 @@ function sola_nl_ajax_send($subscribers, $camp_id){
             $headers[] = 'Reply-To: '.$reply_name.'<'.$reply.'>';
 
         } else if ($saved_send_method >= "2") {
-            $file = PLUGIN_URL.'/includes/phpmailer/PHPMailerAutoload.php';
-            require_once $file;
-            $mail = new PHPMailer();
+            global $phpmailer; 
+     
+            // (Re)create it, if it's gone missing
+            if ( ! ( $phpmailer instanceof PHPMailer ) ) {
+                require_once ABSPATH . WPINC . '/class-phpmailer.php';
+                require_once ABSPATH . WPINC . '/class-smtp.php';
+                $mail = new PHPMailer( true );
+            }
             $mail->IsSMTP();
             $mail->SMTPAuth = true;
             $mail->SMTPKeepAlive = true;

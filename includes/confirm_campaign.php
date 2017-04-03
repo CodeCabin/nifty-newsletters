@@ -1,5 +1,15 @@
 <?php
-$camp = sola_nl_get_camp_details($_GET['camp_id']);
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+/**
+ * Removed due to WP 3.2 not liking this
+ */
+// check_admin_referer();
+if(!current_user_can("manage_options")){
+    exit;
+}
+
+$camp = sola_nl_get_camp_details(intval($_GET['camp_id']));
 $mail_method = get_option("sola_nl_send_method");
 if ($mail_method == "1") { $mail_method = "wp_mail"; }
 else if ($mail_method == "3") { $mail_method = "Gmail"; }
@@ -15,7 +25,7 @@ $limit_time = get_option('sola_nl_send_limit_time');
     <h2><?php _e("Confirm Campaign","sola") ?></h2>
     <div>
         <?php /* */ ?>
-        <form id='<?php if ($camp->type == '2') { echo 'saveform'; } else { echo 'sendform'; } ?>' action="?page=sola-nl-menu&action=send_campaign&camp_id=<?php echo $_GET['camp_id'] ?>"  method="POST">
+        <form id='<?php if ($camp->type == '2') { echo 'saveform'; } else { echo 'sendform'; } ?>' action="?page=sola-nl-menu&action=send_campaign&camp_id=<?php echo intval($_GET['camp_id']) ?>"  method="POST">
             <input type="hidden" name="camp_id"   value="<?php echo $camp->camp_id ?>" />
             <table>
                             <tr>
@@ -102,9 +112,9 @@ $limit_time = get_option('sola_nl_send_limit_time');
                 <tr>
                     <td colspan="2">
                         <?php if($camp->type == 3){ ?>
-                            <a title="<?php _e("Return To Editor","sola");?>" class="button" href="admin.php?page=sola-nl-menu&action=custom_template&camp_id=<?php  echo $_GET['camp_id'] ?>"><?php _e("Return To Editor","sola"); ?></a> 
+                            <a title="<?php _e("Return To Editor","sola");?>" class="button" href="<?php echo admin_url('admin.php?page=sola-nl-menu&action=custom_template&camp_id=' . intval($_GET['camp_id']) ); ?>"><?php _e("Return To Editor","sola"); ?></a> 
                         <?php } else { ?>
-                            <a title="<?php _e("Return To Editor","sola");?>" class="button" href="admin.php?page=sola-nl-menu&action=editor&camp_id=<?php  echo $_GET['camp_id'] ?>"><?php _e("Return To Editor","sola"); ?></a> 
+                            <a title="<?php _e("Return To Editor","sola");?>" class="button" href="<?php echo admin_url('admin.php?page=sola-nl-menu&action=editor&camp_id=' . intval($_GET['camp_id']) ); ?>"><?php _e("Return To Editor","sola"); ?></a> 
                         <?php } ?>
                           <?php _e("or","sola"); ?>
                         

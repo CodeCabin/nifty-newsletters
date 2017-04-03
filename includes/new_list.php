@@ -1,6 +1,13 @@
 <?php 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+check_admin_referer('sola_nl_new_list');
+if(!current_user_can("manage_options")){
+    exit;
+}
+
 if(isset($_GET['list_id'])){
-    $list = sola_nl_get_list($_GET['list_id']);
+    $list = sola_nl_get_list(intval($_GET['list_id']));
 } else {
     $list = false;
 }
@@ -8,9 +15,9 @@ if(isset($_GET['list_id'])){
 <div class="wrap">        
     
    <h2>
-      <?php _e("New List","sola") ?>
+      <?php if (isset($list->list_name)) { _e("$list->list_name","sola"); } else { _e("New List","sola"); } ?>
    </h2>
-   <form action="admin.php?page=sola-nl-menu-lists" method="post">
+   <form action="<?php echo admin_url('admin.php?page=sola-nl-menu-lists'); ?>" method="post">
       <input type="hidden" value="<?php if($list){ echo $list->list_id; }?>" name="list_id" />
       <table>
          <tr>

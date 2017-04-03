@@ -1,4 +1,10 @@
 <?php 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+if(!current_user_can("manage_options")){
+    exit;
+}
+
 $current_page = 1;
 $order = "DESC";
 if (isset($_SESSION['sola_nl_success'])) {
@@ -8,13 +14,13 @@ if (isset($_SESSION['sola_nl_success'])) {
 $orderBy = "created";
 $limit = 10;
 if(isset($_GET["p"])){
-    $current_page = $_GET["p"];
+    $current_page = sanitize_text_field($_GET["p"]);
 }
 if(isset($_GET["order"])){
-    $order = $_GET["order"];
+    $order = sanitize_text_field($_GET["order"]);
 }
 if(isset($_GET["orderBy"])){
-    $orderBy = $_GET["orderBy"];
+    $orderBy = sanitize_text_field($_GET["orderBy"]);
 }
 if($order == "DESC"){
     $orderswop = "ASC";
@@ -25,17 +31,18 @@ $lc_order = strtolower($order);
 
 $order_url = "&order=".$order."&orderBy=".$orderBy;
 if(isset($_GET['subscriber'])){
-    $subscriber_search = $_GET['subscriber'];
+    $subscriber_search = sanitize_text_field($_GET['subscriber']);
     $subscribers = sola_nl_get_subscribers('', $limit, $current_page, $order, $orderBy, $subscriber_search);
 } else if(isset($_GET['list_id'])){
-    $subscribers = sola_nl_get_subscribers($_GET['list_id'], $limit, $current_page, $order, $orderBy);
+    $subscribers = sola_nl_get_subscribers(intval($_GET['list_id']), $limit, $current_page, $order, $orderBy);
 } else if (isset($_GET['list_id']) && isset($_GET['subscriber'])){
-    $subscribers = sola_nl_get_subscribers($_GET['list_id'], $limit, $current_page, $order, $orderBy, $subscriber_search);
+    $subscribers = sola_nl_get_subscribers(intval($_GET['list_id']), $limit, $current_page, $order, $orderBy, $subscriber_search);
 }else {
     $subscribers = sola_nl_get_subscribers('', $limit, $current_page, $order, $orderBy);
 }
 $total_rows = sola_nl_get_total_subs();
 $total_pages = ceil($total_rows/$limit);
+
 
 ?>
 <div class='wrap'>        
@@ -43,7 +50,11 @@ $total_pages = ceil($total_rows/$limit);
     <div id="icon-users" class="icon32 icon32-posts-post"><br></div>
     <h2>
         <?php _e("Subscribers","sola") ?>
-      <a href="?page=sola-nl-menu&action=new_subscriber" class="add-new-h2"><?php _e("Add Subscriber","sola") ?></a>
+    
+       <a href="<?php echo wp_nonce_url('?page=sola-nl-menu&action=new_subscriber', 'sola_nl_new_subscriber'); ?>" class="add-new-h2">
+                               <?php _e("Add Subscriber","sola") ?>
+                            </a>
+
       <a href="?page=sola-nl-menu&action=import" class="add-new-h2"><?php _e("Import Subscribers","sola") ?></a>
       <a href="?page=sola-nl-menu&action=sola_csv_export" target="_BLANK" class="add-new-h2"><?php _e("Export Subscribers","sola") ?></a>
     </h2>
@@ -55,13 +66,13 @@ $total_pages = ceil($total_rows/$limit);
         </p>        
     </form>
 
-    <form action="admin.php?page=sola-nl-menu-subscribers" method="post">
+    <form action="<?php echo admin_url('admin.php?page=sola-nl-menu-subscribers'); ?>" method="post">
         <div class="tablenav top">
             <div class="alignleft">
                 <button class="button-primary" name="action" value="sola-delete-subs" >Delete</button>
             </div>
             <div class="tablenav-pages">
-                <span class="displaying-num"><?php echo $total_rows ?><?php _e("items", "sola") ?></span>
+                <span class="displaying-num"><?php echo $total_rows ?><?php _e(" items", "sola") ?></span>
                 <span class="pagination-links">
                     
                     <a class="first-page <?php if($current_page == 1){echo "disabled";} ?>" title="Go to the first page" <?php if($current_page != 1) { ?>href="<?php echo $_SERVER['PHP_SELF'];?>?page=sola-nl-menu-subscribers&p=<?php echo "1"; echo $order_url; ?>" <?php } ?>>«</a>
@@ -108,15 +119,15 @@ $total_pages = ceil($total_rows/$limit);
                 </tr>
             </thead>
             <tbody>
-                <?php foreach($subscribers as $subscriber){?>
+                <?php foreach($subscribers as $subscriber) { ?>
                     <tr>
                         <td>
                             <input type="checkbox" name="sola_check_subs[]" value="<?php echo  $subscriber->sub_id ?>" class="sola-check-box">
                         </td>
                         <td>
                         <strong>
-                            <a href="?page=sola-nl-menu&action=new_subscriber&sub_id=<?php echo $subscriber->sub_id ?>">
-                                <?php if($subscriber->sub_name){
+                            <a href="<?php echo wp_nonce_url('?page=sola-nl-menu&action=new_subscriber&sub_id=' . $subscriber->sub_id, 'sola_nl_new_subscriber'); ?>" >
+                               <?php if($subscriber->sub_name){
                                     echo $subscriber->sub_name; 
                                 } else {
                                     _e("(No Name)","sola");
@@ -125,7 +136,11 @@ $total_pages = ceil($total_rows/$limit);
                         </strong>
                         <div class="row-actions">
                             <span>
-                                <a href="?page=sola-nl-menu&action=new_subscriber&sub_id=<?php echo $subscriber->sub_id ?>">Edit</a>
+
+                            <a href="<?php echo wp_nonce_url('?page=sola-nl-menu&action=edit_subscriber&sub_id=' . $subscriber->sub_id, 'sola_nl_edit_subscriber'); ?>">
+                               Edit
+                            </a>
+                                
                             </span> |
                             <span class="trash">
                                 <a href="?page=sola-nl-menu-subscribers&action=delete_subscriber&sub_id=<?php echo $subscriber->sub_id ?>" >Delete</a>
@@ -143,7 +158,14 @@ $total_pages = ceil($total_rows/$limit);
                             $i = 0;
                             foreach($lists as $list){
                                 if($i > 0) echo ", ";?>
-                                <a href="?page=sola-nl-menu-subscribers&list_id=<?php echo $list->list_id ?>"><?php echo $list->list_name; ?></a><?php
+
+                                <a href="<?php echo wp_nonce_url('?page=sola-nl-menu-subscribers&list_id=' . $list->list_id, 'sola_nl_edit_subscriber'); ?>">
+                                <?php
+                                    echo $list->list_name;
+                                ?>
+                                </a>
+
+                                <?php
                                 $i++;
                             }
                             ?>
@@ -154,6 +176,7 @@ $total_pages = ceil($total_rows/$limit);
                     </tr>
                 <?php } ?>
             </tbody>
+
             <tfoot>
                 <tr>
                     <th class="manage-column column-cb check-column">
