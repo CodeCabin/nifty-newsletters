@@ -5,7 +5,7 @@ Tags: newsletter, newsletters, email newsletters, email newsletter, email subscr
 Requires at least: 3.6
 Tested up to: 4.7.2
 Stable tag: trunk
-License: GPLv2
+License: GPLv3
 
 Create and send newsletters, automatic post notifications and autoresponders that are modern and beautiful with Nifty Newsletters.
 
