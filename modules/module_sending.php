@@ -650,7 +650,7 @@ function sola_cron_send($camp_id = false) {
             $sql = "SELECT * FROM `$sola_nl_camp_tbl` WHERE `camp_id` = '$camp_id'";
             $camp = $wpdb->get_row($sql);
             
-            if ($camp->type != 2) { sola_return_error(new WP_Error( 'Notice', __( 'Campaign send initiated' ), 'Started sending '.count($subscribers).' mails for campaign '.$camp_id.' at '.date("Y-m-d H:i:s"))); }
+            if ($camp->type != 2) { sola_return_error(new WP_Error( 'Notice', __( 'Campaign send initiated' ), 'Started sending '.count($subscribers).' mails for campaign '.$camp_id.' at '.date("Y-m-d H:i:s")), false); }
 
             if (isset($camp->reply_to)) { $reply = $camp->reply_to; }
             if (isset($camp->reply_to_name)) { $reply_name = stripslashes($camp->reply_to_name); }
@@ -767,11 +767,11 @@ function sola_cron_send($camp_id = false) {
 
                     if($check === true){
                         $status = 1;
-                        echo "Email sent to $sub_email successfully <br />";
+                        // echo "Email sent to $sub_email successfully <br />";
                     } else {
                         $status = 9;
-                        sola_return_error(new WP_Error( 'sola_error', __( 'Failed to send email to subscriber' ), 'Could not send email to '.$mail->ErrorInfo ));
-                        echo "<p>Failed to send to ".$sub_email."</p>";
+                        sola_return_error(new WP_Error( 'sola_error', __( 'Failed to send email to subscriber' ), 'Could not send email to '.$mail->ErrorInfo ), false);
+                        // echo "<p>Failed to send to ".$sub_email."</p>";
                     }
 
                     sola_update_camp_limit($camp_id);
@@ -793,7 +793,7 @@ function sola_cron_send($camp_id = false) {
 
                     
                     $end = (float) array_sum(explode(' ',microtime()));
-                    echo "<br />processing time: ". sprintf("%.4f", ($end-$debug_start))." seconds<br />";
+                    // echo "<br />processing time: ". sprintf("%.4f", ($end-$debug_start))." seconds<br />";
 
                 }
             }
@@ -803,11 +803,11 @@ function sola_cron_send($camp_id = false) {
         }
         if ($saved_send_method >= "2") { $mail->smtpClose(); unset($mail); }
         $end = (float) array_sum(explode(' ',microtime()));
-        echo "<br />processing time: ". sprintf("%.4f", ($end-$debug_start))." seconds<br />";
+        // echo "<br />processing time: ". sprintf("%.4f", ($end-$debug_start))." seconds<br />";
 
         update_option("sola_currently_sending","no");
         if ($camp->type != 2) {
-            sola_return_error(new WP_Error( 'Notice', __( 'Campaign send ended' ), 'Ended sending campaign '.$camp_id.' at '.date("Y-m-d H:i:s") ));
+            sola_return_error(new WP_Error( 'Notice', __( 'Campaign send ended' ), 'Ended sending campaign '.$camp_id.' at '.date("Y-m-d H:i:s") ), false);
         }
         sola_nl_done_sending_camp($camp_id);
 

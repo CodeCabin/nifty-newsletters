@@ -41,7 +41,12 @@
                            <a href="?page=sola-nl-menu-lists&action=delete_list&list_id=<?php echo $list->list_id ?>">
                               <?php _e("Delete","sola"); ?>
                            </a>
-                        </span>
+                        </span> |
+                        <span>                        
+                           <a href="?page=sola-nl-menu-subscribers&action=sola_csv_export&list_id=<?php echo $list->list_id ?>">
+                              <?php _e("Export List","sola"); ?>
+                           </a>
+                        </span> |
                      </div>
                   </td>
                   <td>

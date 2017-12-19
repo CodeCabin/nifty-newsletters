@@ -3,12 +3,23 @@
 Plugin Name: Nifty Newsletters
 Plugin URI: http://www.solaplugins.com
 Description: Create beautiful email newsletters in a flash with Nifty Newsletters.
-Version: 4.0.18
+Version: 4.0.19
 Author: SolaPlugins
 Author URI: http://www.solaplugins.com
 */
 
 /**
+ * 4.0.19 - 2017-05-29 - Medium Priority
+ * New Feature: You can now export a single list into a CSV file
+ * Bug Fix: Fixed a bug that caused a database error when reactivating the plugin on an existing install
+ * Enhancement: Selects a default theme when reaching the theme's page while creating a new campaign
+ * Bug Fix: Fixed a bug that prevented the color pickers in the Newsletter editor to not open
+ * Bug Fix: PHP errors fixed when trying to import subscribers
+ * Enhancement: Changes made to feedback form when sending
+ * Bug Fix: Javascript errors on the preview page fixed
+ * Bug Fix: Fixed JS errors on the campaigns page when sending a new campaign
+ *
+ * 
  * 4.0.18 - 2017-04-03 - Medium priority
  * Fixed bugs that caused the 'Are you sure you want to do this?' when performing some actions
  * PHP Warnings fixed 
@@ -223,7 +234,7 @@ define("SOLA_PLUGIN_NAME","Nifty Newsletters");
 
 global $sola_nl_version;
 global $sola_nl_version_string;
-$sola_nl_version = "4.0.18";
+$sola_nl_version = "4.0.19";
 $sola_nl_version_string = "";
 
 
@@ -770,7 +781,12 @@ function sola_nl_wp_head() {
 
 
     if (isset($_POST['sola_nl_send_feedback'])) {
-        if(wp_mail("support@solaplugins.com", "Plugin feedback", "Name: ".sanitize_text_field($_POST['sola_nl_feedback_name'])."\n\r"."Email: ".sanitize_email($_POST['sola_nl_feedback_email'])."\n\r"."Website: ".sanitize_text_field($_POST['sola_nl_feedback_website'])."\n\r"."Feedback:".sanitize_text_field($_POST['sola_nl_feedback_feedback']) )){
+        $content = "Name: ".sanitize_text_field($_POST['sola_nl_feedback_name'])."\n\r"."Email: ".sanitize_email($_POST['sola_nl_feedback_email'])."\n\r"."Website: ".sanitize_text_field($_POST['sola_nl_feedback_website'])."\n\r"."Feedback:".sanitize_text_field($_POST['sola_nl_feedback_feedback']);
+        
+        $headers = array();
+        // $headers[] = 'Reply-To: '.sanitize_text_field($_POST['sola_nl_feedback_name']).' <'.sanitize_email($_POST['sola_nl_feedback_email']).'>';
+        $headers[] = 'From: '.sanitize_text_field($_POST['sola_nl_feedback_name']).' <'.sanitize_email($_POST['sola_nl_feedback_email']).'>';
+        if(wp_mail("support@solaplugins.com", "Plugin Feedback", $content, $headers )){
             echo "<div id=\"message\" class=\"updated\"><p>".__("Thank you for your feedback. We will be in touch soon","sola")."</p></div>";
         } else {
 
@@ -806,23 +822,31 @@ function sola_nl_wp_head() {
            /* check if correct file type */
            if (strpos($_FILES['sub_import_file']['type'], ".csv" !== false) ) { sola_return_error(new WP_Error( 'sola_error', __( 'Upload error','sola'), __("Please ensure you upload a CSV file. The file you are trying to upload is a ",'sola').$_FILES['sub_import_file']['type'].__(' type file','sola') )); }
            else {
-               $arm_nl_check = sola_import_file_subscribers($_POST['sub_list']);
-               if ( is_wp_error($arm_nl_check) ) sola_return_error($arm_nl_check);
+                if( isset( $_POST['sub_list'] ) ){
+                    $arm_nl_check = sola_import_file_subscribers($_POST['sub_list']);
+                    if ( is_wp_error($arm_nl_check) ) sola_return_error($arm_nl_check);
+                    else {
+                        $_SESSION['arm_nl_success'] = __("Subscribers Imported Successfully","sola");
+                        wp_redirect(admin_url('admin.php?page=sola-nl-menu-subscribers'));
+                        exit('Cannot redirect');
+                    }
+                } else {
+                    echo "<div id=\"message\" class=\"error\"><p><strong>Please select a list to import to.</strong></p></div>";
+                    // sola_return_error($arm_nl_check);
+                }
+           }
+       } else {
+            if( isset( $_POST['sub_import_excel'] ) && isset( $_POST['sub_list'] ) ){
+                $arm_nl_check = sola_import_subscribers(sanitize_text_field($_POST['sub_import_excel']),sanitize_text_field($_POST['sub_list']));
+                if ( is_wp_error($arm_nl_check) ) sola_return_error($arm_nl_check);
                 else {
                     $_SESSION['arm_nl_success'] = __("Subscribers Imported Successfully","sola");
                     wp_redirect(admin_url('admin.php?page=sola-nl-menu-subscribers'));
                     exit('Cannot redirect');
                 }
-
-           }
-       } else {
-
-            $arm_nl_check = sola_import_subscribers(sanitize_text_field($_POST['sub_import_excel']),sanitize_text_field($_POST['sub_list']));
-            if ( is_wp_error($arm_nl_check) ) sola_return_error($arm_nl_check);
-            else {
-                $_SESSION['arm_nl_success'] = __("Subscribers Imported Successfully","sola");
-                wp_redirect(admin_url('admin.php?page=sola-nl-menu-subscribers'));
-                exit('Cannot redirect');
+            } else {
+                echo "<div id=\"message\" class=\"error\"><p><strong>Please select a file to import and a list to import to.</strong></p></div>";
+                // sola_return_error($arm_nl_check);
             }
        }
 
@@ -2355,8 +2379,10 @@ function sola_nl_view_browser(){
         return site_url("?action=sola_nl_browser&camp_id=".$sola_global_campid);
     }
 }
-function sola_return_error($data) {
-    echo "<div id=\"message\" class=\"error\"><p><strong>".$data->get_error_message()."</strong><blockquote>".$data->get_error_data()."</blockquote></p></div>";
+function sola_return_error($data, $echo = true ) {
+    if( $echo ){
+        echo "<div id=\"message\" class=\"error\"><p><strong>".$data->get_error_message()."</strong><blockquote>".$data->get_error_data()."</blockquote></p></div>";
+    }
     sola_write_to_error_log($data);
 }
 function sola_write_to_error_log($data) {
@@ -2580,8 +2606,18 @@ function sola_nl_init_post_processing(){
             header("Expires: 0");
             header("Pragma: public");
             $fh = @fopen( 'php://output', 'w' );
-            $query = "SELECT * FROM `{$wpdb->prefix}sola_nl_subscribers`";
+
+            $sola_nl_subscribers_table = $wpdb->prefix.'sola_nl_subscribers';
+            $sola_nl_subscribers_list_table = $wpdb->prefix.'sola_nl_subscribers_list';
+
+            if( isset( $_GET['list_id'] ) && $_GET['list_id'] != "" ){
+                $query = "SELECT * FROM $sola_nl_subscribers_table LEFT JOIN $sola_nl_subscribers_list_table ON $sola_nl_subscribers_table.sub_id = $sola_nl_subscribers_list_table.sub_id WHERE $sola_nl_subscribers_list_table.list_id = ".intval( $_GET['list_id'] );
+            } else {
+                $query = "SELECT * FROM $sola_nl_subscribers_table";    
+            }
+
             $results = $wpdb->get_results( $query, ARRAY_A );
+
             $headerDisplayed = true;
             foreach ( $results as $data ) {
                 // Add a header row if it hasn't been added yet
@@ -3255,7 +3291,6 @@ function sola_nl_theme_selection() {
               $sola_current_url = $theme_url.$sola_theme;
               $theme_data = @scandir($sola_current_directory, 1);
               //var_dump($theme_data);
-
               $theme_html_file = $sola_current_directory."/".$sola_theme.".html";
               $theme_style_file = $sola_current_directory."/".$sola_theme."-style.json";
               $theme_thumbnail_file = $sola_current_url."/thumbnail.png";
@@ -3288,7 +3323,7 @@ function sola_nl_theme_selection() {
                   <em><?php _e("Author: ","sola"); ?><?php echo $json_decoded_themn_data['theme_data']['author']; ?></em><br />
                   <em><?php _e("Version: ","sola"); ?><?php echo $json_decoded_themn_data['theme_data']['version']; ?></em>
               </p>
-              <input type="radio" name="theme_id" value="<?php echo $sola_current_directory.",".$sola_current_url; ?>">
+              <input type="radio" name="theme_id" <?php checked( 'basic-layout-1', $sola_theme ); ?> value="<?php echo $sola_current_directory.",".$sola_current_url; ?>">
 
               <img src="<?php echo $theme_thumbnail_file; ?>" width="170px">
           </label>

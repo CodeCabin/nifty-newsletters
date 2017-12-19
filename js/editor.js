@@ -399,38 +399,39 @@ jQuery(document).ready( function() {
  
     });
     jQuery('.colorpicker').colpick({
-	layout:'hex',
-	submit:0,
-	colorScheme:'dark',
-        
-        
-	onChange:function(hsb,hex,rgb,el,bySetColor) {
-		jQuery(el).css('backgroundColor','#'+hex);
-                jQuery(el).attr("value", '#'+hex);
-                
-                jQuery(jQuery(el).attr("element")).css(jQuery(el).attr("css"),'#'+hex);
-                
-		// Fill the text box just if the color was set using the picker, and not the colpickSetColor function.
-		if(!bySetColor) jQuery(el).val(hex);
+        layout:'hex',
+        submit:0,
+        colorScheme:'dark',
+        onChange:function(hsb,hex,rgb,el,bySetColor) {
+            
+            jQuery(el).css('backgroundColor','#'+hex);
+            jQuery(el).attr("value", '#'+hex);
+            jQuery(jQuery(el).attr("element")).css(jQuery(el).attr("css"),'#'+hex);
+
+            // Fill the text box just if the color was set using the picker, and not the colpickSetColor function.
+            if(!bySetColor) jQuery(el).val(hex);
                 // Was saving letter on color change but this was too intense as too many calls are made
                 //sola_save_letter();
-	},
+            },
         onHide:function(){
             sola_save_letter();
         }
     }).keyup(function(){
-	jQuery(this).colpickSetColor(this.value);
+        
+        jQuery(this).colpickSetColor(jQuery(this).attr('value'));
+
     }).click(function (){
-        jQuery(this).colpickSetColor(jQuery(this).attr("color"));
+
+        var the_color_hash = jQuery(this).attr('value')
+        var new_color = the_color_hash.replace('#', '');
+        jQuery(this).colpickSetColor(new_color);
+
     });
-    
-    
-    
-    
+
+    // jQuery('.colorpicker').colpick();
+
     //add default colors on load
     sola_add_style_to_letter();
-    
-    
     
     jQuery(".style-editor-input").change(function(){
         jQuery(jQuery(this).attr("element")).css(jQuery(this).attr("css"),jQuery(this).attr("value"));

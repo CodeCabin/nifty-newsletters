@@ -395,3 +395,8 @@ li { list-style: disc; margin-left:30px; }
 .sola_css_ai_text { cursor: move !important; }
 .sola_table { position: relative; margin-top:10px; }
 #sola_toolbar { opacity: 0.8; }
+
+
+.colpick{
+    z-index: 9999;
+}

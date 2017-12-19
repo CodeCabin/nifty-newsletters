@@ -248,20 +248,27 @@ function sola_nl_add_wp_user_to_sub(){
    $sql = "SELECT * FROM `$sola_nl_camp_tbl`";
    if(!$wpdb->get_results($sql)){
         $wp_users = get_users('role=Administrator');
-        @$wpdb->insert($sola_nl_list_tbl, array('list_id' => '', 'list_name' => 'My First List', 'list_description' => 'This is your first list.'));
-        $list_id = $wpdb->insert_id;
-//        $styles = sola_nl_default_styles_array();
-//        $wpdb->insert($sola_nl_camp_tbl, array('camp_id'=>'', 'subject'=> "My First Campaign", 'theme_id' => '1', 'styles' => $styles));
-//        $camp_id = $wpdb->insert_id;
-//        $wpdb->insert($sola_nl_camp_list_tbl, array('id' => '', 'camp_id'=>$camp_id,'list_id'=>$list_id));
-        foreach($wp_users as $wp_user){
-           $email = $wp_user->user_email;
-           $key = wp_hash_password( $email );
-           @$wpdb->insert( $sola_nl_subs_tbl, array( 'sub_id' => '', 'sub_email' => $email , 'sub_key' => $key ));
-           $sub_id = $wpdb->insert_id;
-           if($sub_id > 0){
-             $wpdb->insert($sola_nl_subs_list_tbl, array('id'=> '', 'sub_id'=>$sub_id, 'list_id'=>$list_id));
-           }
+        $exists = $wpdb->get_row("SELECT * FROM $sola_nl_list_tbl WHERE `list_name` = 'My First List' ");
+        if( $exists == false ){
+          //New user - not an existing one that is reactivating the plugin.
+          @$wpdb->insert($sola_nl_list_tbl, array('list_id' => '', 'list_name' => 'My First List', 'list_description' => 'This is your first list.'));
+          $list_id = $wpdb->insert_id;
+          if( !is_wp_error( $wpdb ) ){
+            $wpdb->print_error();
+          }
+  //        $styles = sola_nl_default_styles_array();
+  //        $wpdb->insert($sola_nl_camp_tbl, array('camp_id'=>'', 'subject'=> "My First Campaign", 'theme_id' => '1', 'styles' => $styles));
+  //        $camp_id = $wpdb->insert_id;
+  //        $wpdb->insert($sola_nl_camp_list_tbl, array('id' => '', 'camp_id'=>$camp_id,'list_id'=>$list_id));
+          foreach($wp_users as $wp_user){
+             $email = $wp_user->user_email;
+             $key = wp_hash_password( $email );
+             @$wpdb->insert( $sola_nl_subs_tbl, array( 'sub_id' => '', 'sub_email' => $email , 'sub_key' => $key ));
+             $sub_id = $wpdb->insert_id;
+             if($sub_id > 0){
+               $wpdb->insert($sola_nl_subs_list_tbl, array('id'=> '', 'sub_id'=>$sub_id, 'list_id'=>$list_id));
+             }
+          }
         }
    }
 }

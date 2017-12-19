@@ -3,9 +3,9 @@ Contributors: SolaPlugins, NickDuncan, CodeCabin_, Jarryd Long
 Donate link: http://solaplugins.com
 Tags: newsletter, newsletters, email newsletters, email newsletter, email subscription, email, emailing, email signup, newsletter signup, newsletter widget, subscribe widget, subscribers, newsletter widget, email newsletter, newsletter builder, automatic post notification, auto post notifications, autoresponder, autoresponders, auto-responder, post notification, automatic newsletter
 Requires at least: 3.6
-Tested up to: 4.7.2
+Tested up to: 4.7.5
 Stable tag: trunk
-License: GPLv3
+License: GPLv2
 
 Create and send newsletters, automatic post notifications and autoresponders that are modern and beautiful with Nifty Newsletters.
 
@@ -127,6 +127,16 @@ Nifty Newsletters strongly suggests that you follow the CAN-SPAM Act. We have in
 Please update to this version as it contains several security improvements
 
 == Changelog ==
+
+= 4.0.19 - 2017-05-29 - Medium Priority =
+* New Feature: You can now export a single list into a CSV file
+* Bug Fix: Fixed a bug that caused a database error when reactivating the plugin on an existing install
+* Enhancement: Selects a default theme when reaching the theme's page while creating a new campaign
+* Bug Fix: Fixed a bug that prevented the color pickers in the Newsletter editor to not open
+* Bug Fix: PHP errors fixed when trying to import subscribers
+* Enhancement: Changes made to feedback form when sending
+* Bug Fix: Javascript errors on the preview page fixed
+* Bug Fix: Fixed JS errors on the campaigns page when sending a new campaign
 
 = 4.0.18 - 2017-04-03 - Medium priority =
 * Fixed bugs that caused the 'Are you sure you want to do this?' when performing some actions

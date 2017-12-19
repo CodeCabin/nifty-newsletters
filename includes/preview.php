@@ -30,10 +30,10 @@ $camp = sola_nl_get_camp_details(intval($_GET['camp_id'])); ?>
 <div class="sola_nl_preview_container">    
     <div id="sola_tabs">
           <ul>
-              <li><a href="javascript:void(0)" class="preview_button_button" id="preview_desktop" window_width="800px" add_class="preview_desktop" title="<?php _e('Desktop', 'sola'); ?>"><?php _e('Desktop', 'sola'); ?></a></li>
-              <li><a href="javascript:void(0)" class="preview_button_button" id="preview_mobile" window_width="300px" add_class="preview_mobile" title="<?php _e('Mobile', 'sola'); ?>"><?php _e('Mobile', 'sola'); ?></a></li>
-              <li><a href="javascript:void(0)" class="preview_button_button" id="preview_tablet" window_width="500px" add_class="preview_tablet" title="<?php _e('Tablet (iPad - Portrait)', 'sola'); ?>"><?php _e('Tablet (iPad - Portrait)', 'sola'); ?></a></li>
-                <li><a href="javascript:void(0)" class="preview_button_button" id="preview_tablet_landscape" window_width="800px" add_class="preview_tablet_landscape" title="<?php _e('Tablet (Nexus 10 - Landscape)', 'sola'); ?>"><?php _e('Tablet (Nexus 10 - Landscape)', 'sola'); ?></a></li>
+              <li><a href="#preview_desktop" class="preview_button_button" id="preview_desktop" window_width="800px" add_class="preview_desktop" title="<?php _e('Desktop', 'sola'); ?>"><?php _e('Desktop', 'sola'); ?></a></li>
+              <li><a href="#preview_desktop" class="preview_button_button" id="preview_mobile" window_width="300px" add_class="preview_mobile" title="<?php _e('Mobile', 'sola'); ?>"><?php _e('Mobile', 'sola'); ?></a></li>
+              <li><a href="#preview_desktop" class="preview_button_button" id="preview_tablet" window_width="500px" add_class="preview_tablet" title="<?php _e('Tablet (iPad - Portrait)', 'sola'); ?>"><?php _e('Tablet (iPad - Portrait)', 'sola'); ?></a></li>
+                <li><a href="#preview_desktop" class="preview_button_button" id="preview_tablet_landscape" window_width="800px" add_class="preview_tablet_landscape" title="<?php _e('Tablet (Nexus 10 - Landscape)', 'sola'); ?>"><?php _e('Tablet (Nexus 10 - Landscape)', 'sola'); ?></a></li>
           </ul>
     </div>    
     
