@@ -369,6 +369,106 @@ function sola_nl_get_post_count(){
 
 add_action('init', 'sola_nl_init_post_processing');
 
+// Subscriber Sign-up API
+/* http://localhost/sola_newsletters/wp-json/sola_newsletters/v1/add_subscriber?email=email&name=name */
+add_action( 'rest_api_init', function () {
+  register_rest_route( 'sola_newsletters/v1', '/add_subscriber', array(
+    'methods' => 'GET',
+    'callback' => 'sola_rest_sign_up',
+    'args' => array(
+        'email' => array(),
+        'name' => array(),
+        'list' => array()
+    )
+  ));
+});
+
+function sola_rest_sign_up( $data ) {
+    global $wpdb;
+    global $sola_nl_subs_tbl;
+    global $sola_nl_subs_list_tbl;
+
+    $parameters = $data->get_params();
+    $subscriber_lists = sola_nl_get_lists();
+    $list_ids = array();
+    $subscriber_exists = false;
+
+    if (isset($parameters['email'] )) {
+
+        $subscriber_email = $parameters['email'];
+
+        if (isset($parameters['name'])) {
+            $subscriber_name = $parameters['name'];
+        } else {
+            $subscriber_name = "";
+        }
+
+        if (isset($parameters['list'])) {
+            $subscriber_list = $parameters['list'];
+        } else {
+            return new WP_Error(
+                'no_list',
+                __( 'No list provided.' ),
+                array( 'status' => 404 )
+            );
+        }
+        
+        $list_array = explode ( ',', $subscriber_list );
+        $subscriber_key = wp_hash_password( $subscriber_email );
+
+        foreach ($subscriber_lists as $subscriber_list) {
+            // If the chosen list exists
+            foreach ($list_array as $list) {
+                if ($list == strtolower($subscriber_list->list_name)) {
+                    array_push($list_ids, $subscriber_list->list_id);
+                }
+            }
+        }
+
+        if ($list_ids == null) {
+            return new WP_Error(
+                'list_not_found',
+                __( 'Invalid List.' ),
+                array( 'status' => 404 )
+            );
+        }
+
+        // Check if subscriber exists
+        $sql = "SELECT * FROM `$sola_nl_subs_tbl` WHERE `sub_email` = '$subscriber_email'";
+        $subscriber_exists = $wpdb->get_results($sql);
+
+        if (!$subscriber_exists) {
+            // Insert subscriber into subscriber list
+            $sql='INSERT INTO '.$sola_nl_subs_tbl.' (sub_email,sub_name,sub_key) VALUES ("'.$subscriber_email.'","'.$subscriber_name.'","'.$subscriber_key.'")';
+            $result = $wpdb->query($sql);
+
+            // Get the ID of the selected subscriber
+            $sql = "SELECT sub_id FROM `$sola_nl_subs_tbl` WHERE `sub_email` = '$subscriber_email'";
+            $subscriber_id = $wpdb->get_results($sql);
+
+            // Insert the selected lists for the subscriber
+            foreach ( $subscriber_id as $subscriber ) {
+                foreach ($list_ids as $list_id) {
+                    $sql='INSERT INTO '.$sola_nl_subs_list_tbl.' (sub_id,list_id) VALUES ("'.$subscriber->sub_id.'","'.$list_id.'")';
+                    $result = $wpdb->query($sql);
+                }
+            }
+        } else {
+            return new WP_Error(
+                'subscriber_exists',
+                __( 'The subscriber already exists.' ),
+                array( 'status' => 404 )
+            );
+        }
+    } else {
+        return new WP_Error(
+            'no_email',
+            __( 'No email provided.' ),
+            array( 'status' => 404 )
+        );
+    }
+    return 'subscriber successfully added';
+}
 
 function sola_init() {
     /* add a "once every minute" cron job for the wp_cron. */
