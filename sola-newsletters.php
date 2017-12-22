@@ -271,6 +271,10 @@ include "modules/module_subscribers.php";
 
 include "includes/template_shortcode_replacer.php";
 
+// Gutenberg Block
+//( PLUGIN_DIR . '/includes/blocks/subscriber-form/index.php' );
+include "/includes/blocks/subscriber-form/index.php";
+
 add_action('admin_bar_menu', 'sola_sending_mails_tool_bar_name', 998);
 add_action('admin_bar_menu', 'sola_sending_mails_tool_bar', 999 );
 add_action('admin_bar_menu', 'sola_sending_mails_tool_bar_pending', 1000);
@@ -409,7 +413,7 @@ function sola_rest_sign_up( $data ) {
             return new WP_Error(
                 'no_list',
                 __( 'No list provided.' ),
-                array( 'status' => 404 )
+                array( 'status' => 400 )
             );
         }
         
@@ -457,7 +461,7 @@ function sola_rest_sign_up( $data ) {
             return new WP_Error(
                 'subscriber_exists',
                 __( 'The subscriber already exists.' ),
-                array( 'status' => 404 )
+                array( 'status' => 400 )
             );
         }
     } else {
@@ -467,7 +471,11 @@ function sola_rest_sign_up( $data ) {
             array( 'status' => 404 )
         );
     }
-    return 'subscriber successfully added';
+    return new WP_Error(
+        'subscriber_added',
+        __( 'Successfully added.' ),
+        array( 'status' => 200 )
+    );
 }
 
 function sola_init() {
