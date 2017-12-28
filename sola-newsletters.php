@@ -272,8 +272,7 @@ include "modules/module_subscribers.php";
 include "includes/template_shortcode_replacer.php";
 
 // Gutenberg Block
-//( PLUGIN_DIR . '/includes/blocks/subscriber-form/index.php' );
-include "/includes/blocks/subscriber-form/index.php";
+include "includes/blocks/subscriber-form/index.php";
 
 add_action('admin_bar_menu', 'sola_sending_mails_tool_bar_name', 998);
 add_action('admin_bar_menu', 'sola_sending_mails_tool_bar', 999 );
