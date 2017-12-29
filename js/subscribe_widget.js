@@ -35,6 +35,7 @@ jQuery(function(){
                 },
                 success: function(response){
                     jQuery(div).empty().append(response);
+                    
                 }
 
             });

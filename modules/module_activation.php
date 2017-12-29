@@ -247,6 +247,7 @@ function sola_nl_add_wp_user_to_sub(){
    global $sola_nl_camp_list_tbl;
    $sql = "SELECT * FROM `$sola_nl_camp_tbl`";
    if(!$wpdb->get_results($sql)){
+      if($wpdb->get_var("SHOW TABLES LIKE '$sola_nl_camp_tbl'") != $sola_nl_camp_tbl) {
         $wp_users = get_users('role=Administrator');
         $exists = $wpdb->get_row("SELECT * FROM $sola_nl_list_tbl WHERE `list_name` = 'My First List' ");
         if( $exists == false ){
@@ -270,7 +271,8 @@ function sola_nl_add_wp_user_to_sub(){
              }
           }
         }
-   }
+      }
+  }
 }
 function sola_nl_add_default_editor_style(){
     global $wpdb;
