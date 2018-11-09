@@ -3,12 +3,21 @@
 Plugin Name: Nifty Newsletters
 Plugin URI: http://www.solaplugins.com
 Description: Create beautiful email newsletters in a flash with Nifty Newsletters.
-Version: 4.0.19
+Version: 4.0.21
 Author: SolaPlugins
 Author URI: http://www.solaplugins.com
 */
 
 /**
+ * 4.0.21 - 2018-11-09 - Low priority
+ * Added data eraser functionality using WordPress hooks (GDPR)
+ * Added data export functionality using WordPress hooks (GDPR)
+ *
+ * 4.0.20 - 2018-11-05 - Low priority
+ * Tested in WP 5.0 Beta 2
+ * Enhanced settings page user interface
+ * Bug Fix: Fixed a bug that prevented the ability to edit a subscriber
+ *
  * 4.0.19 - 2017-05-29 - Medium Priority
  * New Feature: You can now export a single list into a CSV file
  * Bug Fix: Fixed a bug that caused a database error when reactivating the plugin on an existing install
@@ -234,7 +243,7 @@ define("SOLA_PLUGIN_NAME","Nifty Newsletters");
 
 global $sola_nl_version;
 global $sola_nl_version_string;
-$sola_nl_version = "4.0.19";
+$sola_nl_version = "4.0.21";
 $sola_nl_version_string = "";
 
 
@@ -270,9 +279,6 @@ include "modules/module_auto.php";
 include "modules/module_subscribers.php";
 
 include "includes/template_shortcode_replacer.php";
-
-// Gutenberg Block
-include "includes/blocks/subscriber-form/index.php";
 
 add_action('admin_bar_menu', 'sola_sending_mails_tool_bar_name', 998);
 add_action('admin_bar_menu', 'sola_sending_mails_tool_bar', 999 );
@@ -372,110 +378,6 @@ function sola_nl_get_post_count(){
 
 add_action('init', 'sola_nl_init_post_processing');
 
-// Subscriber Sign-up API
-/* http://localhost/sola_newsletters/wp-json/sola_newsletters/v1/add_subscriber?email=email&name=name */
-add_action( 'rest_api_init', function () {
-  register_rest_route( 'sola_newsletters/v1', '/add_subscriber', array(
-    'methods' => 'GET',
-    'callback' => 'sola_rest_sign_up',
-    'args' => array(
-        'email' => array(),
-        'name' => array(),
-        'list' => array()
-    )
-  ));
-});
-
-function sola_rest_sign_up( $data ) {
-    global $wpdb;
-    global $sola_nl_subs_tbl;
-    global $sola_nl_subs_list_tbl;
-
-    $parameters = $data->get_params();
-    $subscriber_lists = sola_nl_get_lists();
-    $list_ids = array();
-    $subscriber_exists = false;
-
-    if (isset($parameters['email'] )) {
-
-        $subscriber_email = $parameters['email'];
-
-        if (isset($parameters['name'])) {
-            $subscriber_name = $parameters['name'];
-        } else {
-            $subscriber_name = "";
-        }
-
-        if (isset($parameters['list'])) {
-            $subscriber_list = $parameters['list'];
-        } else {
-            return new WP_Error(
-                'no_list',
-                __( 'No list provided.' ),
-                array( 'status' => 400 )
-            );
-        }
-        
-        $list_array = explode ( ',', $subscriber_list );
-        $subscriber_key = wp_hash_password( $subscriber_email );
-
-        foreach ($subscriber_lists as $subscriber_list) {
-            // If the chosen list exists
-            foreach ($list_array as $list) {
-                if ($list == strtolower($subscriber_list->list_name)) {
-                    array_push($list_ids, $subscriber_list->list_id);
-                }
-            }
-        }
-
-        if ($list_ids == null) {
-            return new WP_Error(
-                'list_not_found',
-                __( 'Invalid List.' ),
-                array( 'status' => 404 )
-            );
-        }
-
-        // Check if subscriber exists
-        $sql = "SELECT * FROM `$sola_nl_subs_tbl` WHERE `sub_email` = '$subscriber_email'";
-        $subscriber_exists = $wpdb->get_results($sql);
-
-        if (!$subscriber_exists) {
-            // Insert subscriber into subscriber list
-            $sql='INSERT INTO '.$sola_nl_subs_tbl.' (sub_email,sub_name,sub_key) VALUES ("'.$subscriber_email.'","'.$subscriber_name.'","'.$subscriber_key.'")';
-            $result = $wpdb->query($sql);
-
-            // Get the ID of the selected subscriber
-            $sql = "SELECT sub_id FROM `$sola_nl_subs_tbl` WHERE `sub_email` = '$subscriber_email'";
-            $subscriber_id = $wpdb->get_results($sql);
-
-            // Insert the selected lists for the subscriber
-            foreach ( $subscriber_id as $subscriber ) {
-                foreach ($list_ids as $list_id) {
-                    $sql='INSERT INTO '.$sola_nl_subs_list_tbl.' (sub_id,list_id) VALUES ("'.$subscriber->sub_id.'","'.$list_id.'")';
-                    $result = $wpdb->query($sql);
-                }
-            }
-        } else {
-            return new WP_Error(
-                'subscriber_exists',
-                __( 'The subscriber already exists.' ),
-                array( 'status' => 400 )
-            );
-        }
-    } else {
-        return new WP_Error(
-            'no_email',
-            __( 'No email provided.' ),
-            array( 'status' => 404 )
-        );
-    }
-    return new WP_Error(
-        'subscriber_added',
-        __( 'Successfully added.' ),
-        array( 'status' => 200 )
-    );
-}
 
 function sola_init() {
     /* add a "once every minute" cron job for the wp_cron. */
@@ -1180,7 +1082,7 @@ function sola_nl_admin_menu_layout() {
         include('includes/new_campaign.php');
     } else if ($_GET['page'] == "sola-nl-menu" && $_GET['action'] == "duplicate_campaign") {
         include('includes/duplicate_campaign.php');
-    }else if ($_GET['page'] == "sola-nl-menu" && $_GET['action'] == "new_subscriber") {
+    }else if ($_GET['page'] == "sola-nl-menu" && $_GET['action'] == "new_subscriber" || $_GET['action'] == "edit_subscriber") {
         include('includes/new_subscriber.php');
     }else if ($_GET['page'] == "sola-nl-menu" && $_GET['action'] == "import") {
         include('includes/import_subscribers.php');
@@ -1232,12 +1134,12 @@ function sola_nl_admin_menu_layout_display() {
 
 
 function sola_nl_add_user_stylesheet() {
-    wp_register_style( 'sola_nl_styles', plugins_url('/css/style.css', __FILE__) );
+    wp_register_style( 'sola_nl_styles', plugins_url('/css/style.css', __FILE__), array(), '1.1' );
     wp_enqueue_style( 'sola_nl_styles' );
 
 }
 function sola_nl_add_admin_stylesheet() {
-
+    global $sola_nl_version;
     if(isset($_GET['page']) && isset($_GET['action'])){
         if($_GET['page'] == "sola-nl-menu" && ($_GET['action'] == "camp_stats" || $_GET['action'] == 'single_sub_stats')) {
             wp_register_style( 'sola_nl_bootstrap_css', PLUGIN_DIR.'/css/bootstrap.min.css' );
@@ -1266,7 +1168,7 @@ function sola_nl_add_admin_stylesheet() {
         wp_enqueue_style( 'sola_nl_styles' );
     } else {
         if( isset( $_GET['page'] ) && ( $_GET['page'] == 'sola-nl-menu-settings' || $_GET['page'] == 'sola-nl-menu' || $_GET['page'] == 'sola-nl-extensions' ) ) {
-            wp_register_style( 'sola_nl_styles', plugins_url('/css/style.css', __FILE__) );
+            wp_register_style( 'sola_nl_styles', plugins_url('/css/style.css', __FILE__), array(), $sola_nl_version);
             wp_enqueue_style( 'sola_nl_styles' );
         }
     }
@@ -3697,4 +3599,114 @@ function sola_nl_admin_extensions(){
     </div>
     <?php
 }
+
+
+/*
+ * Handles deletion of personal data(subscribers) when requested by the WordPress GDPR hooks.
+*/
+function sola_nl_personal_data_eraser($email, $page = 1){
+    global $wpdb;
+    global $sola_nl_subs_tbl;
+    global $sola_nl_subs_list_tbl;
+
+    $items_removed = false;
+
+    $subscriber_data = $wpdb->get_row( "SELECT * FROM `$sola_nl_subs_tbl` WHERE `sub_email` = '$email'" );
+    
+    if ($subscriber_data != NULL) {
+        $subscriber_id = $subscriber_data->sub_id;
+        if ($wpdb->delete($sola_nl_subs_tbl, array( 'sub_id' => $subscriber_id ))) {
+            $wpdb->delete( $sola_nl_subs_list_tbl, array( 'sub_id' => $subsriber_id ));
+            $items_removed = true;
+        }
+    }
+
+    return array( 
+        'items_removed' => $items_removed,
+        'items_retained' => false, 
+        'messages' => array(), 
+        'done' => true,
+    );
+}
+
+/*
+ * Registers eraser callback using WordPress filters.
+*/
+function sola_nl_register_personal_data_eraser($erasers){
+    $erasers['sola-newsletters'] = array(
+        'eraser_friendly_name' => __( 'Sola Newsletters Subscriber Data', 'sola'),
+        'callback'             => 'sola_nl_personal_data_eraser',
+    );
+    return $erasers;
+}
+add_filter('wp_privacy_personal_data_erasers','sola_nl_register_personal_data_eraser',10);
+
+
+
+
+
+/*
+ * Handles exporting of personal data(subscribers) when requested.
+ */
+function sola_nl_data_exporter($email, $page = 1){
+    global $wpdb;
+    global $sola_nl_subs_tbl;
+    global $sola_nl_subs_list_tbl;
+
+    $export_items = array();
+
+    $subscriber_data = $wpdb->get_row( "SELECT * FROM `$sola_nl_subs_tbl` WHERE `sub_email` = '$email'" );
+    if ($subscriber_data != NULL) {
+        $subscriber_id = $subscriber_data->sub_id;
+        $subscriber_name = $subscriber_data->sub_name;
+        $subscriber_last_name = $subscriber_data->sub_last_name;
+
+
+        $data = array(
+            array(
+                'name' => __('Subscriber Email', 'sola'),
+                'value' => $email
+            ),
+            array(
+                'name' => __('Subscriber Name', 'sola'),
+                'value' => $subscriber_name
+            ),
+            array(
+                'name' => __('Subscriber Last Name', 'sola'),
+                'value' => $subscriber_last_name
+            ),
+        );
+
+
+        $export_items[] = array(
+            'group_id' => 'sola-nl-subscribers',
+            'group_label' => __('Newsletter Subscription','sola'),
+            'item_id' => 'sola-nl-sub-id-'.$subscriber_id,
+            'data' => $data,
+        );    
+    }    
+
+    return array(
+        'data' => $export_items,
+        'done' => true,
+    );
+
+
+}
+
+
+/*
+ * Registers exporter callback using WordPress filters
+*/
+function sola_nl_register_personal_data_exporter( $exporters ) {
+  $exporters['my-plugin-slug'] = array(
+    'exporter_friendly_name' => __( 'Sola Newsletters Subscriber Data','sola'),
+    'callback'               => 'sola_nl_data_exporter',
+  );
+  return $exporters;
+}
+ 
+add_filter('wp_privacy_personal_data_exporters','sola_nl_register_personal_data_exporter',10);
+
+
 

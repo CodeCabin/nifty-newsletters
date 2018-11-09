@@ -137,7 +137,7 @@ $total_pages = ceil($total_rows/$limit);
                         <div class="row-actions">
                             <span>
 
-                            <a href="<?php echo wp_nonce_url('?page=sola-nl-menu&action=edit_subscriber&sub_id=' . $subscriber->sub_id, 'sola_nl_edit_subscriber'); ?>">
+                            <a href="<?php echo wp_nonce_url('?page=sola-nl-menu&action=new_subscriber&sub_id=' . $subscriber->sub_id, 'sola_nl_new_subscriber'); ?>">
                                Edit
                             </a>
                                 

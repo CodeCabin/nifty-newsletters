@@ -21,11 +21,12 @@ $sola_nl_ajax_nonce = wp_create_nonce("sola_nl");
  label { font-weight: bolder; }  
  #sola_tabs .ui-tabs-nav {
     padding:0; 
-    height:30px;  
+    height:auto;  
 }
 
 #sola_tabs .ui-tabs-nav {
-    border-bottom: 1px solid #000;
+    border-bottom: none !important; 
+    margin-top: 0px !important;
 }
 #sola_tabs .ui-tabs-panel{
     padding:0;
@@ -39,21 +40,26 @@ $sola_nl_ajax_nonce = wp_create_nonce("sola_nl");
     padding: 5px;
 }
 #sola_tabs .ui-state-default{
-background-color: #0073aa;
+background-color: #eee;
 border-top-left-radius: 5px;
-border-top-right-radius: 5px;
+border-bottom-left-radius: 5px;
+border-top-right-radius: 0px;
 height: 29px;
 padding: 0px 20px;
 line-height: 30px;
+border: none !important;
+
 }
 #sola_tabs .ui-state-default a{
-    color:#FFFFFF;
+    color:#000;
     text-decoration:none;
+    padding-left: 20px;
 }
 #sola_tabs .ui-state-default a:hover{
-    color:#FFFFFF;
     text-decoration:none;    
     cursor: pointer;
+    background-color: #ddd;
+    color: #000;
 }
 
 #sola_tabs .ui-state-active a:hover{
@@ -62,23 +68,81 @@ line-height: 30px;
 }
 #sola_tabs .ui-state-active {
     background-color: #fff;
-    border-top-left-radius: 5px;
+    border: none !important;
+ /*   border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     border-left: 1px solid #303E48;
     border-top: 1px solid #303E48;  
     border-right: 1px solid #303E48;    
-    height: 28px;
+    height: 28px; */
 }
 #sola_tabs .ui-state-active a{
-    color:#0073aa;
+    color: #000 !important;
 }
 #sola_tabs .ui-tabs-nav {
-    text-align: center;
+    text-align: left;
 }
-#sola_tabs .ui-tabs-nav li {
+/*#sola_tabs .ui-tabs-nav li {
     float: none !important;
     display: inline-block;
-}  
+    
+}*/  
+
+
+/* Vertical tab CSS */
+#sola_tabs {
+    background: #fff;
+    padding: 5px;
+
+    border-radius: 3px;
+
+    box-shadow: 0 0 40px 1px rgba(0,0,0,.07);
+    -webkit-box-shadow: 0 0 40px 1px rgba(0,0,0,.07);
+    -moz-box-shadow: 0 0 40px 1px rgba(0,0,0,.07);
+    -o-box-shadow: 0 0 40px 1px rgba(0,0,0,.07);
+}
+
+#sola_tabs table {
+    padding: 0 !important;
+}
+
+#sola_tabs table textarea {
+    width: 100%;
+}
+
+#sola_tabs p.submit {
+    text-align: right;
+    padding-right: 15px;
+    padding-bottom: 0px;
+}
+
+.ui-tabs-vertical {  }
+  .ui-tabs-vertical .ui-tabs-nav {
+      padding: .2em .1em .2em .2em;
+      float: left;
+      /* width: 10%; */
+      max-width: 20%;
+      min-width: 190px;
+  }
+  .ui-tabs-vertical .ui-tabs-nav li { 
+    clear: left; 
+    width: 100%; 
+    border-bottom-width: 1px !important; 
+    border-right-width: 0 !important; 
+    margin: 0 -1px .2em 0; 
+    padding: 0 !important;
+    float: left !important;
+}
+
+  .ui-tabs-vertical .ui-tabs-nav li a { display:block; }
+  .ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active { padding-bottom: 0; padding-right: .1em; border-right-width: 1px; }
+  .ui-tabs-vertical .ui-tabs-panel {
+      padding: 1em !important; 
+      float: left;
+      min-width: 72%;
+      max-width: 75%;
+  }
+
 </style>
 <div class="wrap">
    
@@ -88,7 +152,7 @@ line-height: 30px;
 
     <form action='' name='sola_settings' method='POST' id='sola_nl_settings'>
 
-    <div id="sola_tabs" class="ui-tabs-nav">
+    <div id="sola_tabs" class="ui-tabs-nav ui-tabs-vertical">
       <ul>
           <li><a href="#tabs-1"><?php _e("Main Settings","sola") ?></a></li>
           <li><a href="#tabs-2"><?php _e("E-mail Settings","sola") ?></a></li>
@@ -100,7 +164,8 @@ line-height: 30px;
           <?php if (function_exists("sola_nl_register_pro_version")) { } else { ?><li><a href="#tabs-8"><?php _e("Go Premium", "sola") ?></a></li><?php } ?>
       </ul>
       <div id="tabs-1">
-            <table width='100%'>
+            <h3>Main Settings</h3>
+            <table width='100%' class="wp-list-table striped widefat">
          
                 <?php if (function_exists("sola_nl_premium_activate")) { ?>
                 <tr class="row">
@@ -184,7 +249,7 @@ line-height: 30px;
                 </tr>
             </table>
             <hr/>
-            <table width='100%'>
+            <table width='100%' class="wp-list-table striped widefat">
                 <tr>
                     <td width="250px">
                         <label><?php _e('Email Notifications', 'sola'); ?></label>
@@ -228,7 +293,7 @@ line-height: 30px;
                 </tr>
             </table>
             <hr/>
-            <table width="100%"> 
+            <table width="100%" class="wp-list-table striped widefat"> 
                 <tr>
                     <td width="250px;">
                         <label><?php _e('Enable Link Tracking Globally', 'sola'); ?></label>
@@ -243,10 +308,10 @@ line-height: 30px;
         </div>
         <div id="tabs-2">
             <h2><?php _e("How To Send Your Mail","sola"); ?></h2>
-            <div style="float: left; width:40%">
-                <table>
+            <div style="float: left; width:100%">
+                <table class="wp-list-table striped widefat">
                    <tr>
-                      <td width="250px">
+                      <td>
                          <h3><?php _e("WordPress Mail","sola"); ?></h3>
                         <p class="description"><?php _e("Good 'ol WordPress mail. Nothing wrong with this method for small lists","sola"); ?></p>
                       </td>
@@ -255,7 +320,7 @@ line-height: 30px;
                       </td>
                    </tr>
                    <tr>
-                      <td width="250px">
+                      <td>
                          <h3><?php _e("Gmail","sola"); ?></h3>
                         <p class="description"><?php _e("Send a maximum of 500 mails per day using your Gmail account.","sola"); ?></p>
                       </td>
@@ -264,7 +329,7 @@ line-height: 30px;
                       </td>
                    </tr>
                    <tr>
-                      <td width="250px">
+                      <td>
                          <h3><?php _e("SMTP Server","sola"); ?></h3>
                         <p class="description">
                             <?php _e("Got bigger Lists? Want to stay out of spam folders? This is your method","sola"); ?>
@@ -278,7 +343,7 @@ line-height: 30px;
             </div>
                
             <div id='sola_nl_smtp'>
-                <table>
+                <table class="wp-list-table striped widefat">
                     <tr>
                         <td width="125px">
                             <label><?php _e("Host","sola"); ?></label>
@@ -339,9 +404,9 @@ line-height: 30px;
             if (!$delay) { $delay = 1000000; }
             $limit_time = get_option('sola_nl_send_limit_time');
             ?>
-            <table>
+            <table class="wp-list-table striped widefat">
                 <tr>
-                    <td width="40%" style='min-width:350px;' valign='top'>
+                    <td width="40%" valign='top'>
                         <p class="description" style='padding:10px;'>
                            <?php _e("Certain hosts limit the amount of mails you can send per hour or per day. It is very important that the figure used here is correct or you may run the risk of certain mails not being sent.","sola"); ?>
                         </p>
@@ -409,9 +474,9 @@ line-height: 30px;
 
             <h2><?php _e("Test Your Mail Settings","sola"); ?></h2>
 
-            <table>
+            <table class="wp-list-table striped widefat">
                 <tr>
-                    <td width="40%" style='min-width:350px;'>
+                    <td width="40%">
                         <p class="description" style='padding:10px;'>
                             <?php _e("This is to test your mail settings. If you don't receive a mail, your settings may be incorrect. Please also check your SPAM folder.","sola"); ?>
                         </p>
@@ -426,13 +491,37 @@ line-height: 30px;
                 </tr>
             </table>
             <?php do_action( 'sola_nl_email_settings_after' ); ?>
+
+
+            <br><br>
+            <h2><?php _e("Relevant Extensions","sola"); ?></h2>
+            <div class="extension-wrap">
+                <div class="extensions">
+                    <img src="http://solaplugins.com/wp-content/uploads/2018/01/SendGrid_.png">
+                    <div class="extensions-inner">
+                        <strong><?php _e("Sendgrid Integration","sola"); ?></strong>
+                        <p><?php _e("Get notified of SendGrid event notifications for delivered emails.","sola"); ?></p>
+                        <a href="http://solaplugins.com/nifty-newsletters-sendgrid-integration-add-on/" target="_BLANK" class="button-secondary"><?php _e("Get this extension","sola"); ?></a>
+                    </div>
+                </div>
+                <div class="extensions">
+                    <img src="http://solaplugins.com/wp-content/uploads/2018/01/mailgun_nn.png">
+                    <div class="extensions-inner">
+                        <strong><?php _e("Mailgun Integration","sola"); ?></strong>
+                        <p><?php _e("Get notified of Mailgun event notifications for delivered emails.","sola"); ?></p>
+                        <a href="http://solaplugins.com/nifty-newsletters-mailgun-integration-add-on/" target="_BLANK" class="button-secondary"><?php _e("Get this extension","sola"); ?></a>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
         <div id="tabs-3">
             <h3><?php _e("Sign Up Widget",'sola'); ?></h3>
             <p><?php _e("To put the sign up widget on your site, go to your widgets page, and drag the Sola Newsletter Subscribe widget to the sidebar of your choice.","sola"); ?></p>
-            <table>
+            <table class="wp-list-table striped widefat">
                 <tr>
-                    <td width="250px">
+                    <td>
                         <label><?php _e("Title","sola") ?>:</label>
                         <p class="description" style='padding:10px;' ><?php _e("Set the Title of sign up Box","sola"); ?></p>
                     </td>
@@ -508,7 +597,7 @@ line-height: 30px;
                         </p>
                     </td>
                     <td>
-                        <textarea cols="80" rows="10" name='sola_nl_confirm_mail'><?php echo get_option("sola_nl_confirm_mail"); ?></textarea>
+                        <textarea rows="10" name='sola_nl_confirm_mail'><?php echo get_option("sola_nl_confirm_mail"); ?></textarea>
                     </td>
                 </tr>
                 <tr>                  
@@ -519,7 +608,7 @@ line-height: 30px;
                         </p>
                     </td>
                     <td>
-                        <textarea cols="80" rows="10" name='sola_nl_confirm_thank_you'><?php echo get_option("sola_nl_confirm_thank_you"); ?></textarea>
+                        <textarea rows="10" name='sola_nl_confirm_thank_you'><?php echo get_option("sola_nl_confirm_thank_you"); ?></textarea>
                     </td>
                 </tr>
             </table>
@@ -528,7 +617,7 @@ line-height: 30px;
         <div id="tabs-4">
             <h3><?php _e("Social Links",'sola'); ?></h3>
             <p class="description"><?php _e("Insert Your links to your social platforms that you are associated with",'sola'); ?></p>
-            <table>
+            <table class="wp-list-table striped widefat">
                 <?php $social_links = get_option("sola_nl_social_links");
                     foreach($social_links as $social_name=>$social_link){
                 ?>
@@ -550,7 +639,7 @@ line-height: 30px;
                     sola_nl_analytics_settings_page_pro();
                 } else {
             ?>
-                    <p><h2 class="text-center" ><?php _e('Upgrade to the','sola')?> <a target='_BLANK' href='http://solaplugins.com/plugins/sola-newsletters/?utm_source=plugin&utm_medium=link&utm_campaign=analytics' style='color:#0073aa;'><?php _e('Premium version','sola')?> </a><?php _e('to integrate your Sola Newsletters with Google Analytics.','sola')?></h2></p>
+                    <p><h2 class="text-center" style="padding-bottom: 150px;"><?php _e('Upgrade to the','sola')?> <a target='_BLANK' href='http://solaplugins.com/plugins/sola-newsletters/?utm_source=plugin&utm_medium=link&utm_campaign=analytics' style='color:#0073aa;'><?php _e('Premium version','sola')?> </a><?php _e('to integrate your Sola Newsletters with Google Analytics.','sola')?></h2></p>
             <?php } ?>
             <?php do_action( 'sola_nl_analytics_settings_after' ); ?>
         </div>
@@ -616,7 +705,7 @@ line-height: 30px;
                         <h2><?php _e('We have intergrated analytics so you can easily track traffic from emails to your site', 'sola') ?></h2>
                     </center>
                 </div>
-                <a target="_BLANK" href="http://solaplugins.com/plugins/sola-newsletters/?utm_source=plugin&utm_medium=link&utm_campaign=premium" title="Get Premium Version Now!" style="width: 50%; background-color: #0073aa; display: block; text-align: center; height: 60px; line-height: 60px; font-size: 30px; margin-top: 40px; color:#fff; border-color: #0073aa; margin-left:auto; margin-right:auto;" class="button"><?php _e('Get The Premium Version','sola') ?></a>
+                <a target="_BLANK" href="http://solaplugins.com/plugins/sola-newsletters/?utm_source=plugin&utm_medium=link&utm_campaign=premium" title="Get Premium Version Now!" style="width: 60%; background-color: #0073aa; display: block; text-align: center; height: 60px; line-height: 60px; font-size: 30px; margin-top: 40px; color:#fff; border-color: #0073aa; margin-left:auto; margin-right:auto;" class="button"><?php _e('Get The Premium Version','sola') ?></a>
             </div>
         <?php } ?>
         

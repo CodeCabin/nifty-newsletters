@@ -1,9 +1,10 @@
 === Nifty Newsletters (Formerly Sola Newsletters) ===
-Contributors: SolaPlugins, NickDuncan, CodeCabin_, Jarryd Long
+Contributors: SolaPlugins, NickDuncan, CodeCabin_
 Donate link: http://solaplugins.com
-Tags: newsletter, newsletters, email newsletters, email newsletter, email subscription, email, emailing, email signup, newsletter signup, newsletter widget, subscribe widget, subscribers, newsletter widget, email newsletter, newsletter builder, automatic post notification, auto post notifications, autoresponder, autoresponders, auto-responder, post notification, automatic newsletter
+Tags: newsletter, newsletters, email newsletters, newsletter signup, newsletter widget, post notifications, newsletter block
 Requires at least: 3.6
-Tested up to: 4.7.5
+Tested up to: 5.0
+Requires PHP: 5.3
 Stable tag: trunk
 License: GPLv2
 
@@ -127,6 +128,15 @@ Nifty Newsletters strongly suggests that you follow the CAN-SPAM Act. We have in
 Please update to this version as it contains several security improvements
 
 == Changelog ==
+
+= 4.0.21 - 2018-11-09 - Low priority =
+* Added data eraser functionality using WordPress hooks (GDPR)
+* Added data export functionality using WordPress hooks (GDPR)
+
+= 4.0.20 - 2018-11-02 - Low Priority =
+* Tested in WP 5.0 Beta 2
+* Enhanced settings page user interface
+* Bug Fix: Fixed a bug that prevented the ability to edit a subscriber
 
 = 4.0.19 - 2017-05-29 - Medium Priority =
 * New Feature: You can now export a single list into a CSV file
