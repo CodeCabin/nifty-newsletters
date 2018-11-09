@@ -12,11 +12,12 @@ Create and send newsletters, automatic post notifications and autoresponders tha
 
 == Description ==
 
-Create and send newsletters, automatic post notifications and autoresponders that are modern and beautiful with our unique newsletter editor. Drag and drop images, text areas, buttons, social icons, posts and more. Add a signup widget to your website, manage your subscribers, and send fresh, modern newsletters all within your wordpress admin area.
+Create and send newsletters, automatic post notifications and autoresponders that are modern and beautiful with our unique newsletter editor. Drag and drop images, text areas, buttons, social icons, posts and more. Add a signup widget to your website, manage your subscribers, and send fresh, modern newsletters all within your Wordpress admin area.
 
 = Features =
 * Super easy to use drag and drop newsletter editor
 * Send newsletters to 2500 subscribers
+* GDPR ready
 * Send automatic post notifications when new posts are published
 * Create an autoresponder when new users register on your site
 * Create an autoresponder when someone subscribes to your newsletter
