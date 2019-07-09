@@ -3,12 +3,15 @@
 Plugin Name: Nifty Newsletters
 Plugin URI: http://www.solaplugins.com
 Description: Create beautiful email newsletters in a flash with Nifty Newsletters.
-Version: 4.0.21
+Version: 4.0.22
 Author: SolaPlugins
 Author URI: http://www.solaplugins.com
 */
 
 /**
+ * 4.0.22 - 2019-07-09 - Low priority
+ * Added List buttons if no lists have been created
+ * 
  * 4.0.21 - 2018-11-09 - Low priority
  * Added data eraser functionality using WordPress hooks (GDPR)
  * Added data export functionality using WordPress hooks (GDPR)
@@ -1709,8 +1712,11 @@ function sola_nl_add_camp(){
                __( 'Could not execute query', 'sola'), $wpdb->last_error );
          }
       } else {
-         return new WP_Error( 'Subject Error',
-         __( 'Please Select at least one list to send to', 'sola') );
+        $url_list = admin_url( 'admin.php?page=sola-nl-menu-lists');
+        $error = __('Please Select at least one list to send to. If you have not created a list, could you please create one - ', 'sola');
+        $btn = __('Create a list', 'sola');
+        $html = $error . '<a href=' . $url_list . ' class="button button-secondary">' . $btn . '</a>';
+        return new WP_Error( 'Subject Error', $html);
       }
    } else {
       return new WP_Error( 'Subject Error',

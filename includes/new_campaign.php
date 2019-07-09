@@ -174,6 +174,15 @@ if (isset($camp->automatic_data)) {
                </td>
                <td>
                   <?php 
+                  $is_list = sola_nl_get_lists();
+                  if (empty($is_list)) {
+                    $url_list = admin_url( 'admin.php?page=sola-nl-menu-lists');
+                    $error = 'You have not created a list - ';
+                    $btn = __('Create a list', 'sola');
+                    $html = $error . '<a href=' . $url_list . ' class="button button-secondary">' . $btn . '</a>';
+                                                      
+                    echo $html;
+                  }
                   if (isset($camp->status) && $camp->status == 9) {
                    ?><p class="description" style="color:red;"><?php echo __("You cannot edit the list while the campaign is being sent, or the sending has been paused","sola"); ?></p>
                      <?php

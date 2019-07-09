@@ -3,7 +3,7 @@ Contributors: SolaPlugins, NickDuncan, CodeCabin_
 Donate link: http://solaplugins.com
 Tags: newsletter, newsletters, email newsletters, newsletter signup, newsletter widget, post notifications, newsletter block
 Requires at least: 3.6
-Tested up to: 5.0
+Tested up to: 5.2.2
 Requires PHP: 5.3
 Stable tag: trunk
 License: GPLv2
@@ -129,6 +129,9 @@ Nifty Newsletters strongly suggests that you follow the CAN-SPAM Act. We have in
 Please update to this version as it contains several security improvements
 
 == Changelog ==
+
+= 4.0.22 - 2019-07-09 - Low priority =
+* Added List buttons if no lists have been created
 
 = 4.0.21 - 2018-11-09 - Low priority =
 * Added data eraser functionality using WordPress hooks (GDPR)
