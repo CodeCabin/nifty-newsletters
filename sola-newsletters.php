@@ -3,12 +3,16 @@
 Plugin Name: Nifty Newsletters
 Plugin URI: http://www.solaplugins.com
 Description: Create beautiful email newsletters in a flash with Nifty Newsletters.
-Version: 4.0.22
+Version: 4.0.23
 Author: SolaPlugins
 Author URI: http://www.solaplugins.com
 */
 
 /**
+ * 4.0.23 - 2019-08-26 - Low priority
+ * Added Gutenberg Integration
+ * Added a class to submit button in the shortcode
+ * 
  * 4.0.22 - 2019-07-09 - Low priority
  * Added List buttons if no lists have been created
  * 
@@ -282,6 +286,8 @@ include "modules/module_auto.php";
 include "modules/module_subscribers.php";
 
 include "includes/template_shortcode_replacer.php";
+
+include "includes/blocks/gutenberg-block/index.php";
 
 add_action('admin_bar_menu', 'sola_sending_mails_tool_bar_name', 998);
 add_action('admin_bar_menu', 'sola_sending_mails_tool_bar', 999 );

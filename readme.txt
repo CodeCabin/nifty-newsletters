@@ -130,6 +130,10 @@ Please update to this version as it contains several security improvements
 
 == Changelog ==
 
+= 4.0.23 - 2019-08-27 - Low priority =
+* Added Gutenberg Integration
+* Added a class to submit button in the shortcode
+
 = 4.0.22 - 2019-07-09 - Low priority =
 * Added List buttons if no lists have been created
 
