@@ -227,7 +227,7 @@ function sola_nl_sign_up_box()
         
         
         $out.='<div>
-            <input type="submit" value="'. __(get_option("sola_nl_sign_up_btn"), "sola") .'">
+            <input type="submit" class="sola_nl_signup_btn" value="'. __(get_option("sola_nl_sign_up_btn"), "sola") .'">
         </div>
         
     </form>
