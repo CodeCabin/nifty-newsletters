@@ -2411,7 +2411,7 @@ function sola_nl_view_browser(){
     } else if (isset($sola_global_subid)) {
         return site_url("?action=sola_nl_browser&camp_id=".$sola_global_campid."&sub_id=".$sola_global_subid);
     } else if (isset($_GET['camp_id']) && (isset($_GET['sub_id']) && intval($_GET['sub_id']) == 0)) {
-        return site_url("?action=sola_nl_browser&camp_id=".$_GET['camp_id']."&sub_id=".$_GET['sub_id']);
+        return site_url("?action=sola_nl_browser&camp_id=".intval($_GET['camp_id'])."&sub_id=".intval($_GET['sub_id']));
     } else {
         return site_url("?action=sola_nl_browser&camp_id=".$sola_global_campid);
     }
