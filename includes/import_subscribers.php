@@ -59,7 +59,7 @@
                <?php $lists = sola_nl_get_lists();
                foreach($lists as $list){?>
                <input type="checkbox" name="sub_list[]" value="<?php echo $list->list_id ?>"/>
-                  <label><?php echo $list->list_name ?> (<?php echo sola_nl_total_list_subscribers($list->list_id) ?>)</label>
+                  <label><?php echo $list->list_name ?> (<?php echo sola_nl_total_active_list_subscribers($list->list_id) ?>)</label>
                   <p class="description"><?php echo $list->list_description ?></p>
                   <?php
                }?>

@@ -179,7 +179,7 @@ if (isset($camp->automatic_data)) {
                     $url_list = admin_url( 'admin.php?page=sola-nl-menu-lists');
                     $error = 'You have not created a list - ';
                     $btn = __('Create a list', 'sola');
-                    $html = $error . '<a href=' . $url_list . ' class="button button-secondary">' . $btn . '</a>';
+                    $html = $error . '<a href=' . $url_list . ' target="_blank" class="button button-secondary">' . $btn . '</a>';
                                                       
                     echo $html;
                   }
@@ -189,14 +189,14 @@ if (isset($camp->automatic_data)) {
                      $lists = sola_nl_get_lists();
                      foreach($lists as $list){?>
                      <input style='display:none;' type="checkbox" name="sub_list[]" <?php if($camp && sola_nl_check_if_selected_list_camp($list->list_id, $camp->camp_id)) echo "checked=checked";?> value="<?php echo $list->list_id ?>"/>
-                        <label style='display:none;'><?php echo $list->list_name ?> (<?php echo sola_nl_total_list_subscribers($list->list_id) ?>)</label>
+                        <label style='display:none;'><?php echo $list->list_name ?> (<?php echo sola_nl_total_active_list_subscribers($list->list_id) ?>)</label>
                         <p class="description" style='display:none;'><?php echo $list->list_description ?></p>
                   <?php }
                   }else {                      
                     $lists = sola_nl_get_lists();
                      foreach($lists as $list){?>
                      <input type="checkbox" name="sub_list[]" <?php if($camp && sola_nl_check_if_selected_list_camp($list->list_id, $camp->camp_id)) echo "checked=checked";?> value="<?php echo $list->list_id ?>"/>
-                        <label><?php echo $list->list_name ?> (<?php echo sola_nl_total_list_subscribers($list->list_id) ?>)</label>
+                        <label><?php echo $list->list_name ?> (<?php echo sola_nl_total_active_list_subscribers($list->list_id) ?>)</label>
                         <p class="description"><?php echo $list->list_description ?></p>
                   <?php } }  ?>
                </td>

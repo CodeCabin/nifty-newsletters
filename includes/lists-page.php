@@ -11,7 +11,8 @@
          <tr>
             <th><?php _e("List Name","sola"); ?></th>
             <th><?php _e("Description","sola"); ?></th>
-            <th><?php _e("Total Subscribers","sola"); ?></th>
+            <th><?php _e("Total Active Subscribers","sola"); ?></th>
+            <th><?php _e("Total Pending Subscribers","sola"); ?></th>
          </tr>
       </thead>
       <tbody>
@@ -54,9 +55,14 @@
                   </td>
                   <td>
                      <?php $list_id = $list->list_id;
-                        echo sola_nl_total_list_subscribers($list_id); 
+                        echo sola_nl_total_active_list_subscribers($list_id); 
                      ?>
                   </td>
+                  <td>
+                     <?php $list_id = $list->list_id;
+                        echo sola_nl_total_pending_list_subscribers($list_id); 
+                     ?>
+                  </td>  
                </tr>
                <?php
             }
