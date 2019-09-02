@@ -24,7 +24,12 @@ $total_subscribers = $sdf->total;
 $sql = "SELECT COUNT(`id`) as `total` FROM `$sola_nl_camp_subs_tbl` WHERE `camp_id` = '$camp_id' AND `status` >= 1";
 $sdf = $wpdb->get_row($sql);
 $total_sent = $sdf->total;
+if($total_sent == 0 || $total_subscribers == 0){
+    $sent_perc = 0;
+}
+else{
 $sent_perc = round((($total_sent / $total_subscribers)*100),1);
+}
 
 if(function_exists('sola_nl_register_pro_return_stats')){
     //Return stats for current campaign

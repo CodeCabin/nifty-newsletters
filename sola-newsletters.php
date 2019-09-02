@@ -12,6 +12,11 @@ Author URI: http://www.solaplugins.com
  * 4.0.23 - 2019-08-26 - Low priority
  * Added Gutenberg Integration
  * Added a class to submit button in the shortcode
+ * Fixed "Create a list" button not opening a new tab
+ * Added Total Active Subscribers and Total Pending Subscribers
+ * Fixed error in the stats section if you have no subscribers
+ * Fixed error when you click on "View in Browser"
+ * Fixed Gutenberg submit button text color error
  * 
  * 4.0.22 - 2019-07-09 - Low priority
  * Added List buttons if no lists have been created
@@ -1199,10 +1204,6 @@ function sola_nl_admin_scripts_basic() {
         if ($_GET['action'] == "camp_stats") {
             wp_register_script('sola_nl_googlecharts_js', "//www.google.com/jsapi", false);
             wp_enqueue_script( 'sola_nl_googlecharts_js' );
-//            wp_register_script('sola_nl_jqplot_js', PLUGIN_DIR.'/js/jquery.jqplot.min.js');
-//            wp_enqueue_script('sola_nl_jqplot_js');
-//            wp_register_script('sola_nl_jqplot_render_js', PLUGIN_DIR.'/js/jqplot.pieRenderer.min.js');
-//            wp_enqueue_script('sola_nl_jqplot_render_js');
             if(function_exists('sola_nl_register_pro_version')){
                 wp_register_script('sola_nl_google_charts_custom_js', PLUGIN_DIR_PRO.'/js/sola_nl_pro.js');
                 wp_enqueue_script('sola_nl_google_charts_custom_js');
@@ -1413,7 +1414,7 @@ function sola_nl_get_lists(){
    $sql = "SELECT * FROM `$sola_nl_list_tbl`";
    return $wpdb->get_results($sql);
 }
-function sola_nl_total_list_subscribers($list_id){
+function sola_nl_total_active_list_subscribers($list_id){
    global $wpdb;
    global $sola_nl_subs_list_tbl;
    global $sola_nl_subs_tbl;
@@ -1428,6 +1429,21 @@ function sola_nl_total_list_subscribers($list_id){
 
    return $total;
 }
+function sola_nl_total_pending_list_subscribers($list_id){
+    global $wpdb;
+    global $sola_nl_subs_list_tbl;
+    global $sola_nl_subs_tbl;
+    $sql = "SELECT  `$sola_nl_subs_list_tbl`.*, COUNT(`list_id`) AS `total`
+             FROM  `$sola_nl_subs_list_tbl`
+             LEFT JOIN  `$sola_nl_subs_tbl` ON  `$sola_nl_subs_list_tbl`.`sub_id` =  `$sola_nl_subs_tbl`.`sub_id`
+             WHERE `$sola_nl_subs_list_tbl`.`list_id` = '$list_id' AND `$sola_nl_subs_tbl`.`status` = '2'";
+    //$sql = "SELECT *, COUNT(`list_id`) AS `total` FROM `$sola_nl_subs_list_tbl` WHERE `list_id` = '$list_id' AND `status` = '1'";
+    //echo $sql; //debug
+    $result = $wpdb->get_row($sql);
+    $total = $result->total;
+ 
+    return $total;
+ }
 function sola_nl_get_subscriber($sub_id){
    global $wpdb;
    global $sola_nl_subs_tbl;
@@ -2395,7 +2411,7 @@ function sola_nl_view_browser(){
     } else if (isset($sola_global_subid)) {
         return site_url("?action=sola_nl_browser&camp_id=".$sola_global_campid."&sub_id=".$sola_global_subid);
     } else if (isset($_GET['camp_id']) && (isset($_GET['sub_id']) && intval($_GET['sub_id']) == 0)) {
-        return site_url("?action=sola_nl_browser&camp_id=".$sola_global_campid."&sub_id=".$sola_global_subid);
+        return site_url("?action=sola_nl_browser&camp_id=".$_GET['camp_id']."&sub_id=".$_GET['sub_id']);
     } else {
         return site_url("?action=sola_nl_browser&camp_id=".$sola_global_campid);
     }

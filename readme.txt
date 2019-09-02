@@ -133,6 +133,11 @@ Please update to this version as it contains several security improvements
 = 4.0.23 - 2019-08-27 - Low priority =
 * Added Gutenberg Integration
 * Added a class to submit button in the shortcode
+* Fixed "Create a list" button not opening a new tab
+* Added Total Active Subscribers and Total Pending Subscribers
+* Fixed error in the stats section if you have no subscribers
+* Fixed error when you click on "View in Browser"
+* Fixed Gutenberg submit button text color error
 
 = 4.0.22 - 2019-07-09 - Low priority =
 * Added List buttons if no lists have been created

@@ -74,9 +74,14 @@ function sl_newsletters_gutenberg_render($attributes){
 
      // Button color
      $inline_style = '';
-     if(!empty($attributes['submit_button_color']) || !empty($attributes['color_text_submit_button']) ){
-     $inline_style = '<style>.sola_nl_signup_btn[type="submit"] { background: ' . $attributes['submit_button_color'] . '; color:' . $attributes['color_text_submit_button'] . ';}</style>';
+     if(!empty($attributes['submit_button_color'])){
+     $inline_style = '<style>.sola_nl_signup_btn[type="submit"] { background: ' . $attributes['submit_button_color'] . ';}</style>';
      }
+
+    // Button color
+    if(!empty($attributes['color_text_submit_button']) ){
+    $inline_style .= '<style>.sola_nl_signup_btn[type="submit"] { color:' . $attributes['color_text_submit_button'] . ';}</style>';
+    }
 
  
     $attributes = $inline_style . "<div $txt_align>" . do_shortcode('[sola_nl_sign_up]') . "</div>";
