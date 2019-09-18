@@ -26,7 +26,7 @@ if (isset($camp->automatic_data)) {
    <div id="icon-edit" class="icon32 icon32-posts-post"><br></div>
    <h2><?php _e("Create a New Campaign","sola") ?></h2>
    <div>
-      <form action="" method="POST">
+      <form action="" method="POST" class="sola_nl_shadows">
           <input type="hidden" value="<?php if ($camp) { echo $camp->camp_id; }?>" name="camp_id" />
          <table>
             <tr>

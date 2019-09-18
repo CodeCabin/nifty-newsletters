@@ -1,5 +1,4 @@
 /* CHANGES TO WORDPRESS STYLES */
-
 body{
     background-color: transparent;
 }
@@ -10,16 +9,16 @@ body{
 #wpbody-content{
     padding-bottom: 0;
 }
-
 /* EDITOR Admin Panel */
-
+body.folded .sola-content-fixed {
+   left: 36px;
+}
 .sola-content-fixed{
     position: fixed;
-    left: 160px;
-    right: 0; 
+    width: 100%;
 }
 .sola-header-content{
-    height: 70px;
+    height: 69px;
     
     background: #fff;
     display: block; 
@@ -27,53 +26,68 @@ body{
 }
 .sola-content-fixed .sola-header-content .sola-sidebar-header{
     float:left;
-    padding: 15px 0 25px 0;
     width: 350px;
     text-align: center;
     border-right: 1px solid #cecece;
     z-index: 999;
      
 }
+.wp-content{
+    padding-left: 0;
+}
 .sola-content-fixed .sola-header-content .sola-sidebar-header ul{
     display: inline-block;
+    width: 100%;
+    height: 69%;
+    margin-bottom: 0;
 }
 .sola-content-fixed .sola-header-content .sola-sidebar-header ul li{
+    width: 50%;
+    height: 100%;
+    line-height: 58px;
     margin:0;
     list-style: none;
-    float: left;
-    box-sizing:border-box;
-    -moz-box-sizing:border-box;  
+    float: left;  
     padding: 5px 20px;
-    border: solid 2px #d1d1d1;
     border-right:0;
     cursor: pointer;
 }
 .sola-content-fixed .sola-header-content .sola-sidebar-header ul li:hover{
-    background: #e0e0e0;
+    background: #e9e9e9;
 }
 .sola-content-fixed .sola-header-content .sola-sidebar-header ul li:last-child{
-    border: solid 2px #d1d1d1;
-    border-radius: 0 5px 5px 0;
+    
+    
 }
 .sola-content-fixed .sola-header-content .sola-sidebar-header ul li:first-child{
-    border-radius: 5px 0 0 5px;
+    
 }
 .sola-content-fixed .sola-header-content .sola-sidebar-header ul  .active{
-    background: #e0e0e0;
+    background: #0085ba;
     cursor: default;
+    color: #ffffff;
+}
+.sola-content-fixed .sola-header-content .sola-sidebar-header ul  .active:hover {
+    background: #0085ba;
 }
 .sola-content-fixed .sola-header-content .header-right{
     padding: 20px;
-    margin-left: 350px;
-    text-align: center; 
-    height: 69px
+    left: 510px;
+    position: fixed;
+    text-align: center;
+    right: 0;
+    height: 69px;
 }
 
+.folded .sola-content-fixed .sola-header-content .header-right {
+    left: 385px;
+}
 
 .sidebar{
     position: fixed;
-    height: 75%;
     width:350px;
+    top: 100px;
+    bottom: 48px;
     background-color:#ffffff;
     border-right: 1px solid #cecece;
     box-sizing:border-box;
@@ -82,29 +96,37 @@ body{
 .sidebar #editor_options, #editor-styles{
     overflow: hidden;
     overflow-y: scroll;
-    padding-bottom: 20px;
-    height:75vh;
+    height:100%;
+    background: #f4f4f4;
+    /* padding: 7px; */
     
+}
+::-webkit-scrollbar { 
+    display: none; 
+}
+#wpcontent {
+    padding-left: 0px !important;
 }
 
 .sidebar .content{
-    
-    width: 340px;
+    width: unset;
+    margin-left: 0;
     text-align: center;
+    padding-top: 10px;
 }
+
 .sidebar .content .add-box{
     display: inline-block;
-    height:100px;
-    width:100px;
-    box-sizing:border-box;
-    -moz-box-sizing:border-box;   
-    padding:10px;
-    background: #f2f2f2;
-    margin: 13px 9px 0 0;
-    border-radius: 10px;
-   -webkit-box-shadow: 0px 0px 7px 2px rgba(50, 50, 50, 0.25);
--moz-box-shadow:    0px 0px 7px 2px rgba(50, 50, 50, 0.25);
-box-shadow:         0px 0px 7px 2px rgba(50, 50, 50, 0.25); 
+    height: 100px;
+    width: 40%;
+    padding: 10px;
+    background: #ffffff;
+    margin: 10px;
+    /* margin: 13px 9px 0 0; */
+    transition: box-shadow 0.3s ease;
+}
+.add-box:hover {
+    box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
 }
 .add-box-title h3 {
     font-size:16px;
@@ -117,14 +139,12 @@ box-shadow:         0px 0px 7px 2px rgba(50, 50, 50, 0.25);
     padding-left: 330px;
     width: 100%;
     background-color: #f5f5f5;
-    padding-top: 70px;
+    padding-top: 69px;
 }
 .sidebar .content .expandable-div{
     width: 100%;
     border-radius: 0;
-    -webkit-box-shadow: inset 0px 0px 5px 0px rgba(50, 50, 50, 0.75);
-    -moz-box-shadow:    inset 0px 0px 5px 0px rgba(50, 50, 50, 0.75);
-    box-shadow:         inset 0px 0px 5px 0px rgba(50, 50, 50, 0.75);
+    margin: 0;
     padding: 10px 0 10px 0 ;
     height: auto;
     min-height: 150px
@@ -142,53 +162,143 @@ box-shadow:         0px 0px 7px 2px rgba(50, 50, 50, 0.25);
 .sola_sub_addable_item {
     
     line-height: 40px;
-    border-bottom: solid 1px #222;
+    border-bottom: solid 1px #42424263;
 }
 .sola-extra-content .first{
-    border-top: solid 1px #222;
+    border-top: solid 1px #42424263;
+    text-align: center;
 }
-
 .style{
-    border-bottom: 1px solid #cecece;
-    padding: 10px;
+    border-bottom: 1px solid #e7e7e7;
+    padding: 18px;
+    color: #7b7a7a;
+    background-color: #f4f4f4;
 }
 .style-name{
     text-align: center;
     cursor: pointer;
 }
+
+.style-name h4 {
+    margin-bottom: 0;
+}
+
 .colorpicker {
     width: 100%;
     height: 30px;
     border:1px solid #ccc;
 }
 #sola_nl_send_test{
-    height: 14%;
+    height: 48px;
     position: fixed;
     bottom: 0;
-    padding: 10px;
+    /*padding: 10px;*/
     background: #fff;
     width: 350px;
-    border-top: 1px solid #cecece;
-    border-right: 1px solid #cecece;
 }
 #sola_nl_send_test input{
     width: 244px
 }
-
 .next-button{
     float: right;
 }
 
-/* CUSTOM Styles */
+#sola_nl_send_test .sola_send_preview {
+    color: #000;
+    text-decoration: none;
+    height: 50px;
+    width: 102px;
+    background: #dddddd;
+    border: none;
+    box-shadow: none;
+    text-shadow: none;
+    margin: -4px;
+    width: 106px;
+    border-radius: 0;
+}
 
+#sola_nl_send_test .sola_send_preview:hover {
+    background: #f4f4f4;
+}
+
+#sola_nl_next_temp_btn {
+    color: #000;
+    text-decoration: none;
+    height: 50px;
+    background: #dddddd;
+    border: none;
+    line-height: 50px;
+    box-shadow: none;
+    float: right;
+    text-shadow: none;
+    padding: 0 10px 1px;
+    margin: -10px;
+    width: 106px;
+}
+
+#sola_nl_next_temp_btn:hover {
+    background: #f4f4f4;
+}
+
+.header-right .sola_nl_open_export_dialog {
+    color: #000;
+    text-decoration: none;
+    height: 50px;
+    width: 102px;
+    background: #dddddd;
+    border: none;
+    box-shadow: none;
+    text-shadow: none;
+    margin: -10px;
+    width: 106px;
+}
+
+
+
+.sola-input {
+
+}
+
+
+#sola_nl_to_mail_test {
+    height: 100%;
+    margin-right: 
+}
+
+
+.button-primary .sola_send_preview {
+    background: #f4f4f4;
+    color: #000;
+    width: 106px;
+    height: 50px;
+    text-decoration: none;
+    height: 50px;
+    width: 102px;
+}
+
+
+.add-box-title h3 {
+    color: #585757;
+}
+
+.fa {
+    color: #b5b5b5
+}
+
+.style:hover {
+    background: #e7e7e7;
+    transition: 0.3s;
+}
+
+/* CUSTOM Styles */
 #my_sortable, #my_dropable{
-	list-style-type: none;
-	margin: 0px;
-	float: left;
-	margin-right: 10px;
-	background: #eee;
-	padding: 5px;
-	width: 143px;
+    list-style-type: none;
+    margin: 0px;
+    float: left;
+    margin-right: 10px;
+    background: #eee;
+    padding: 5px;
+    width: 143px;
 }
 .sortable-list{
     min-height: 100px;
@@ -199,21 +309,16 @@ box-shadow:         0px 0px 7px 2px rgba(50, 50, 50, 0.25);
     max-width:595px;
 }
 .sortable-item:hover {
-    //border:1px dashed red;
     opacity: 0.9;
-    //background-color:#efefef;
-    border:1px solid #ccc;
+    border:1px solid #f7f7f7;
 }
-
 td.sortable-item:hover {
     //border:1px dashed red;
     opacity: 0.9;
     //background-color:#efefef;
     border:1px solid #ccc;
 }
-
 .sortable-item img { max-width:595px; }
-
 .sola_input {
     width:580px;
     height:20px;
@@ -223,8 +328,6 @@ h1 { padding-top:0 !important; margin-top:0 !important; }
 h2 { padding-top:0 !important; margin-top:0 !important; }
 h3 { padding-top:0 !important; margin-top:0 !important; }
 h4 { padding-top:0 !important; margin-top:0 !important; }
-
-
 /*Page Corners
 #sola_newsletter_outer_wrapper {
     -webkit-box-shadow: 0 0 4px rgba(0,0,0,0.2),inset 0 0 20px rgba(0,0,0,0.1);
@@ -258,7 +361,6 @@ h4 { padding-top:0 !important; margin-top:0 !important; }
     -o-transform: skew(5deg) rotate(5deg);
     transform: skew(5deg) rotate(5deg);
 }
-
 .editHover{  
     background-color: transparent;
 }  
@@ -279,22 +381,19 @@ li.noPad{
     width: 360px;  
 }  
 .placeholder {
-	background-color: #EEE !important;
-	border:1px dotted #ccc;
-	height: 50px;
-	margin-bottom: 5px;
+    background-color: #EEE !important;
+    border:1px dotted #ccc;
+    height: 50px;
+    margin-bottom: 5px;
         width:100%;
 }
-
-
 .placeholder_td {
-	background-color: #EEE !important;
+    background-color: #EEE !important;
         border:1px dotted #ccc;
-	height: 50px;
-	margin-bottom: 5px;
+    height: 50px;
+    margin-bottom: 5px;
         width:50px;
 }
-
 .right_box_style {
     
     height: 25px;
@@ -338,17 +437,31 @@ li.noPad{
 }
 li { list-style: disc; margin-left:30px; }
 .block{height:100px!important;background:#bbb;margin-bottom:10px;width:500px;color:#000}
-
 #sola_toolbar {
-    
-    top:0;
-    width:100%;
-    padding:1px;
-    margin-left:1px;
-    height:20px;
-    background-color: #CCC;
-    box-shadow: 0 1px 0 #FFFFFF inset;
+    top: 0;
+    padding: 4px;
+    display: inline-block;
+    border-right: none;
+    border-top: none;
+    width: auto;
+    background: none;
+    height: 26px;
+    float: right;
 }
+
+.sortable-item:hover #sola_toolbar {
+    background: #f4f4f4;
+    border-radius: 0px 0px 0px 6px;;
+}
+
+#sola_toolbar:hover {
+    background: #0085ba !important;
+}
+
+#sola_toolbar:hover .fa {
+    color: #ffffff;
+ }
+
 .toolbar_td {
     background-color: #eee !important;
 }   
@@ -362,23 +475,17 @@ li { list-style: disc; margin-left:30px; }
     font-size: 13px;
     margin: 4px;   
 }
-
 .sola_nl_btn{
     cursor: all-scroll;
+    text-align: center;
+    height: 38px;
+    line-height: 37px;
 }
 .style-open{
     background-color: #f2f2f2;
 }
-
-
-
-
 // STYLE EDITOR 
-
-
-
 /* MEDIA QUERIES */
-
 @media only screen and (max-width: 900px) {
     
     
@@ -391,12 +498,112 @@ li { list-style: disc; margin-left:30px; }
         left:0px;     
     }
 }
-
 .sola_css_ai_text { cursor: move !important; }
 .sola_table { position: relative; margin-top:10px; }
 #sola_toolbar { opacity: 0.8; }
-
-
 .colpick{
     z-index: 9999;
+}
+
+.sola_tool {
+    width: auto;
+}
+
+#sola_nl_collapsable {
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    bottom: 20px;
+    border-radius: 80px;
+    right: 20px;
+    text-align: center;
+    background: #f4f4f4;
+    line-height: 40px;
+    cursor: pointer;
+    box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+}
+
+#sola_nl_collapsable i.fa {
+    color: #6e6e6e;
+}
+
+#sola_nl_collapsable:hover {
+    background: #eaeaea;
+}
+
+
+/* Media Queries 13/09/2019 Steve */ 
+
+@media only screen and (max-width: 785px) {
+    .sidebar {
+    width: 100%;
+    height: 30vh;
+    border-bottom: solid 1px #afafaf
+    }
+    
+    #sola_newsletter_preview {
+        padding-left: 0;
+        padding-top: 55px;
+    }
+
+    .sola-content-fixed .sola-header-content .sola-sidebar-header {
+        width: 100%;
+    }
+
+    .sola-content-fixed .sola-header-content .sola-sidebar-header ul li {
+        line-height: 46px;
+    }
+
+    .sola-header-content {
+        height: 55px;
+    }
+
+    #sola_nl_send_test {
+        width: 100%;
+        height: 40px;
+        background: #dddddd;
+        bottom: 48px;
+    }
+
+    #sola_nl_send_test input {
+        width: 70%;
+        height: 40px;
+    }
+
+    #sola_nl_send_test .sola_send_preview {
+        width: 28%;
+        height: 37px;
+        padding: 0;
+    }
+
+    .sola-content-fixed .sola-header-content .sola-sidebar-header ul li {
+        height: 53px;
+    }
+
+    .sola-content-fixed .sola-header-content .header-right {
+        left: 0;
+        bottom: 0;
+        padding-left: 0;
+        padding-right: 0;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .header-right .sola_nl_open_export_dialog {
+        width: 50%;
+        margin: 0;
+        border-right: solid 1px #cdcdcd;
+        background: #f4f4f4;
+    }
+
+    #sola_nl_next_temp_btn {
+        width: 50%;
+        margin: 0;
+        background: #f4f4f4;
+    }
+
+    #sola_nl_collapsable {
+        bottom: 97px;
+    }
+    
 }

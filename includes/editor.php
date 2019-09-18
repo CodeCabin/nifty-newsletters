@@ -60,9 +60,7 @@ if(isset($camp_type['action'])) { $auto_camp_type = $camp_type['action']; } else
         </div>
         <div class="header-right">
             <button class="button sola_nl_open_export_dialog" style="float:left;"><?php _e("Export","sola"); ?></button>
-            <div class="next-button">
-                <a id="sola_nl_next_temp_btn" class='button-primary sola_nl_preview_btn' ><?php _e("Next","sola"); ?></a>
-            </div>
+            <a id="sola_nl_next_temp_btn" class='button-primary sola_nl_preview_btn' ><?php _e("Next","sola"); ?></a>
             <div id='sola_nl_save_text' ><?php if ($_SERVER['REMOTE_ADDR'] == "127.0.0.1") { echo "<span style='color:red'>". __("You are currently using the plugin on your localhost. Various elements such as images will NOT show up in your test or final email as they reference your hard drive which is not accessible via the web to others", 'sola'). "</span>"; } ?></div>
         </div>
     </div>
@@ -89,7 +87,7 @@ if(isset($camp_type['action'])) { $auto_camp_type = $camp_type['action']; } else
                         <h3><?php _e("Table","sola"); ?></h3>
                         <i class="fa fa-3x fa-table"></i>
                     </div>
-                    <div class="sola-extra-content" style="padding:0 20px 10px 10px;">
+                    <div class="sola-extra-content" style="padding:0 20px 10px 20px;">
                         <div class="add-box" style="width:80px; height:80px; margin: 10px 10px 10px 10px;">
                             <div class="add-box-title sola_addable_item" type="table" cols="2">
                                 <center>
@@ -403,15 +401,16 @@ if(isset($camp_type['action'])) { $auto_camp_type = $camp_type['action']; } else
     </div>  
     
 </div>
-
 <div id="sola_newsletter_preview"> 
         <?php       
             $letter = sola_nl_get_letter(intval($_GET['camp_id']), $theme_id);
             echo $letter;
         ?>
 </div>
-
-
+        
+<div id="sola_nl_collapsable">
+    <i class="fa fa-desktop"></i>
+</div>
 
 <?php /* 
  * <div style='display:block;  clear:both; width:602px;'>

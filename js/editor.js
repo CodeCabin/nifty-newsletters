@@ -1,6 +1,3 @@
-
-
-
 jQuery(document).ready( function() {
     
     var sola_is_editing = false;
@@ -13,6 +10,14 @@ jQuery(document).ready( function() {
         //jQuery("#editor_options").css("height", window_height-151);
     });
     
+    jQuery('#sola_nl_collapsable').on('click', function(){
+        if(jQuery(window).width() < 785) {
+            jQuery(".sola-content-fixed").toggle()
+        } else {
+            jQuery('#collapse-button').click();
+        }
+    });
+
     //switch between Styels and Content
     jQuery(".editor_options_header").click(function(){
         console.log('clicked');
@@ -234,18 +239,19 @@ jQuery(document).ready( function() {
         connectToSortable: ".sortable-list",
         start:function(event,ui)
         {
+            /*
           var current_html=jQuery(ui.helper).html();
           var text_of_link=jQuery(this).children().html();
           var new_text_of_link='<p contenteditable="true" title="Click to edit the text" onclick="this.focus();">'+jQuery(this).children().html()+'</p>';
           var new_html_to_use=current_html.replace(text_of_link,new_text_of_link);
           var insert_html='<div class="link_buttons_holder">'+new_html_to_use+'</div>';
           jQuery(ui.helper).html(insert_html);
-          
+           */
         },
         stop:function(event,ui)
         {
             jQuery("#sola_nl_save_text").empty();
-            jQuery(".header-right").css("background", "url("+editor_header_image_url+") center no-repeat");
+            /*jQuery(".header-right").css("background", "url("+editor_header_image_url+") center no-repeat");*/
             if (typeof jQuery(ui.helper).attr('type') !== 'undefined' && jQuery(ui.helper).attr('type') === 'table') {
             } else {
               return jQuery('<div>').addClass('editable').text('Drag to the newsletter');
@@ -687,7 +693,7 @@ function sola_add_toolbars() {
        var cur_children = jQuery(this).children();
        var elementType = jQuery(this).prop('tagName');
        
-       if (elementType === "TABLE") { elementType = "&lt;table&gt;" }
+      // if (elementType === "TABLE") { elementType = "&lt;table&gt;" }
        if (elementType === "TD") { elementType = "&lt;column&gt;" }
        
         if (jQuery(this).find(".sola_tool").length > 0) {
@@ -696,10 +702,10 @@ function sola_add_toolbars() {
             /* check if it is a sortable TD, if yes, add the TD MOVE handle */
             if (jQuery(this).parent().hasClass('sortable-list-2')) {
                  /* td */
-                 jQuery(this).prepend("<div id='sola_toolbar' class='sola_tool toolbar_td' style='width:"+wid+"px;'><em>"+elementType+"</em><i class='sola_tool_icon fa fa-arrows' id='sola_tool_move_td'></i> <i class='sola_tool_icon fa fa-trash-o' id='sola_tool_delete'></i></div>"); 
+                 jQuery(this).prepend("<div id='sola_toolbar' class='sola_tool toolbar_td'><i class='sola_tool_icon fa fa-arrows' id='sola_tool_move_td'></i> <i class='sola_tool_icon fa fa-trash-o' id='sola_tool_delete'></i></div>"); 
             } else if (jQuery(this).parent().hasClass('sortable-list')) {
                  /* normal */
-                 jQuery(this).prepend("<div id='sola_toolbar' class='sola_tool' style='width:"+wid+"px;'><em>"+elementType+"</em><i class='sola_tool_icon fa fa-arrows' id='sola_tool_move'></i> <i class='sola_tool_icon fa fa-trash-o' id='sola_tool_delete'></i></div>"); 
+                 jQuery(this).prepend("<div id='sola_toolbar' class='sola_tool'><i class='sola_tool_icon fa fa-arrows' id='sola_tool_move'></i> <i class='sola_tool_icon fa fa-trash-o' id='sola_tool_delete'></i></div>"); 
 
             }
         }
