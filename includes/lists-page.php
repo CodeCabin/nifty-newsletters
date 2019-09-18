@@ -6,7 +6,8 @@
       <?php _e("My Lists","sola") ?>
        <a href="<?php echo wp_nonce_url('?page=sola-nl-menu&action=new_list', 'sola_nl_new_list'); ?>" class="add-new-h2"><?php _e("Add List","sola") ?></a>
    </h2>
-   <table class="wp-list-table widefat fixed">
+   <table class="wp-list-table widefat fixed" style="box-shadow: 0px 3px 6px rgba(0,0,0,0.1);
+    background: #fff; padding: 15px 15px 28px 15px;">
       <thead>
          <tr>
             <th><?php _e("List Name","sola"); ?></th>

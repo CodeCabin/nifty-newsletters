@@ -130,17 +130,21 @@ Please update to this version as it contains several security improvements
 
 == Changelog ==
 
-= 4.0.23 - 2019-08-27 - Low priority =
-* Added Gutenberg Integration
-* Added a class to submit button in the shortcode
-* Fixed "Create a list" button not opening a new tab
-* Added Total Active Subscribers and Total Pending Subscribers
-* Fixed error in the stats section if you have no subscribers
-* Fixed error when you click on "View in Browser"
-* Fixed Gutenberg submit button text color error
-
-= 4.0.22 - 2019-07-09 - Low priority =
-* Added List buttons if no lists have been created
+= 4.0.22 - 2019-09-18 - High priority =
+* Enhancement: Improved UI/UX of the campaign editor  
+* Enhancement: Improved UI/UX of the feedback page
+* Enhancement: Improved UI/UX of theme selection page
+* Enhancement: Added a class to submit button in the shortcode
+* New feature: Added button to editor to open page previewer
+* New feature: Added Gutenberg Integration
+* New feature: Added List buttons if no lists have been created
+* New feature: Added Total Active Subscribers and Total Pending Subscribers
+* Bug Fix: Fixed a bug where when dragging in editor added additional padding
+* Bug Fix: Fixed a bug where an error was thrown when sending on localhost
+* Bug Fix: Fixed "Create a list" button not opening a new tab
+* Bug Fix: Fixed error in the stats section if you have no subscribers
+* Bug Fix: Fixed error when you click on "View in Browser"
+* Bug Fix: Fixed Gutenberg submit button text color error
 
 = 4.0.21 - 2018-11-09 - Low priority =
 * Added data eraser functionality using WordPress hooks (GDPR)

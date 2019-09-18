@@ -13,38 +13,54 @@ $camp_id = intval($_GET['camp_id']);
 //$themes = sola_get_theme_basic();
 
 ?>
+            <!-- Just added this -->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script type="text/javascript">
+    jQuery( function() {
+        jQuery( "#tabs" ).tabs();
+     } );
+
+</script>
+
 <div class="wrap">    
-    <div id="icon-edit" class="icon32 icon32-posts-post"><br></div>
     <h2><?php _e('Your Themes', "sola") ?>   </h2>
-    <form method="post" action="<?php echo admin_url('admin.php?page=sola-nl-menu&action=theme&camp_id=' . $camp_id); ?>">
-        <input type="hidden" value="<?php echo $camp_id ?>" name="camp_id">
-        <div class="themes_wrapper">
-              <?php sola_nl_theme_selection(); ?>
+    <div id="icon-edit" class="icon32 icon32-posts-post"><br></div>
+        <div id="tabs">
+            <!-- Just added this -->
+            <ul >
+                <li><a href="#tabs-1">Themes</a></li>
+                <li><a href="#tabs-2">Upload</a></li>
+            </ul>
+            <!-- Just added this -->
+            <div id="tabs-1"> 
+                <form method="post" action="<?php echo admin_url('admin.php?page=sola-nl-menu&action=theme&camp_id=' . $camp_id); ?>">
+                    <input type="hidden" value="<?php echo $camp_id ?>" name="camp_id">
+                    <h3>Default Themes</h3>
+                    <hr>
+                    <br>
+                    <?php sola_nl_theme_selection(); ?>
+
+                    <br><br>
+                    <h3>Theme Store</h3>
+                    <hr>
+                    <br>
+                    <br>
+                    <div class="avail_themes_wrapper">
+                        <?php sola_nl_theme_selection_available(); ?>
+                        
+                    </div>
+                    <br>
+                     <input type="submit" value="<?php _e("Next","sola"); ?>" class="button-primary button-large" name="sola_set_theme">
+                 </form>  
+            </div>
+             <!-- Upload a theme section -->
+            <div id="tabs-2"> 
+                <h3><?php _e("Upload a theme","sola"); ?></h3>
+                <form method="POST" enctype="multipart/form-data" name="sola_theme_upload"><input type="file" name="sola_theme_file" /><input type="submit" value="<?php _e("Upload","sola"); ?>" class="button-primary button-large" name="sola_upload_theme_btn"></form>
+            </div>
         </div> 
-        <input type="submit" value="<?php _e("Next","sola"); ?>" class="button-primary button-large" name="sola_set_theme">
-    </form>  
-    <br /><br />
-    
-    <hr />
-    <h2><?php _e('Theme store', "sola") ?></h2>
-    <br />
-    <div class="avail_themes_wrapper">
-          <?php sola_nl_theme_selection_available(); ?>
-    </div> 
-    
-
-    <br /><br />
-    <hr />
-    <h3><?php _e("Upload a theme","sola"); ?></h3>
-    <form method="POST" enctype="multipart/form-data" name="sola_theme_upload"><input type="file" name="sola_theme_file" /><input type="submit" value="<?php _e("Upload","sola"); ?>" class="button-primary button-large" name="sola_upload_theme_btn"></form>
-    
-        
-        
-
-    
-    
-    <br /><br />
-    <hr />
-    <p>&nbsp;</p>
+        <br>
+       
 </div>
 <?php include 'footer.php'; ?>

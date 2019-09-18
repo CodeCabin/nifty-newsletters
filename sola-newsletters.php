@@ -3,23 +3,27 @@
 Plugin Name: Nifty Newsletters
 Plugin URI: http://www.solaplugins.com
 Description: Create beautiful email newsletters in a flash with Nifty Newsletters.
-Version: 4.0.23
+Version: 4.0.22
 Author: SolaPlugins
 Author URI: http://www.solaplugins.com
 */
 
 /**
- * 4.0.23 - 2019-08-26 - Low priority
- * Added Gutenberg Integration
- * Added a class to submit button in the shortcode
- * Fixed "Create a list" button not opening a new tab
- * Added Total Active Subscribers and Total Pending Subscribers
- * Fixed error in the stats section if you have no subscribers
- * Fixed error when you click on "View in Browser"
- * Fixed Gutenberg submit button text color error
- * 
- * 4.0.22 - 2019-07-09 - Low priority
- * Added List buttons if no lists have been created
+ * 4.0.22 - 2019-09-18 - High priority
+ * Enhancement: Improved UI/UX of the campaign editor  
+ * Enhancement: Improved UI/UX of the feedback page
+ * Enhancement: Improved UI/UX of theme selection page
+ * Enhancement: Added a class to submit button in the shortcode
+ * New feature: Added button to editor to open page previewer
+ * New feature: Added Gutenberg Integration
+ * New feature: Added List buttons if no lists have been created
+ * New feature: Added Total Active Subscribers and Total Pending Subscribers
+ * Bug Fix: Fixed a bug where when dragging in editor added additional padding
+ * Bug Fix: Fixed a bug where an error was thrown when sending on localhost
+ * Bug Fix: Fixed "Create a list" button not opening a new tab
+ * Bug Fix: Fixed error in the stats section if you have no subscribers
+ * Bug Fix: Fixed error when you click on "View in Browser"
+ * Bug Fix: Fixed Gutenberg submit button text color error
  * 
  * 4.0.21 - 2018-11-09 - Low priority
  * Added data eraser functionality using WordPress hooks (GDPR)
@@ -255,7 +259,7 @@ define("SOLA_PLUGIN_NAME","Nifty Newsletters");
 
 global $sola_nl_version;
 global $sola_nl_version_string;
-$sola_nl_version = "4.0.21";
+$sola_nl_version = "4.0.22";
 $sola_nl_version_string = "";
 
 
@@ -1124,7 +1128,7 @@ function sola_nl_admin_menu_layout() {
             include ('/includes/single_stats.php');
         }
     } else if ($_GET['page'] == "sola-nl-menu" && $_GET['action'] == "theme"){
-        if(function_exists('sola_nl_register_pro_version')){
+        if(function_exists('sola_nl_regstier_pro_version')){
             include (PLUGIN_URL_PRO.'/includes/campaign_theme_pro.php');
         } else {
             include('includes/campaign_theme.php');
@@ -1146,6 +1150,11 @@ function sola_nl_admin_menu_layout_display() {
 
 /*------------------- MOVED ACTVATION FUNCTIONS TO module_activation.php --------------------------------- */
 
+function sola_nl_add_admin_shared_stylesheet() {
+    wp_register_style( 'sola_nl_admin_shared_styles', plugins_url('/css/admin.css', __FILE__), array(), '1.1' );
+    wp_enqueue_style( 'sola_nl_admin_shared_styles' );
+
+}
 
 function sola_nl_add_user_stylesheet() {
     wp_register_style( 'sola_nl_styles', plugins_url('/css/style.css', __FILE__), array(), '1.1' );
@@ -1245,6 +1254,7 @@ function sola_nl_admin_error_log_layout() {
     include('includes/error-log-page.php');
 }
 function sola_nl_admin_feedback_layout() {
+    sola_nl_add_admin_shared_stylesheet();
     include('includes/feedback-page.php');
 }
 
@@ -3351,9 +3361,10 @@ function sola_nl_theme_selection() {
 
 
 
+    $is_active = 'basic-layout-1' === $sola_theme ? 'active' : ''; 
 
     ?>
-      <div class="theme_div_wrapper">
+      <div class="theme_div_wrapper <?php echo $is_active; ?>">
           <label>
               <h3><?php echo ucfirst($json_decoded_themn_data['theme_data']['title']) ?></h3>
               <p>

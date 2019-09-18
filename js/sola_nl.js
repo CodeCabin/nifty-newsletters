@@ -482,3 +482,14 @@ var signup_widget={
         }
     }
 };
+
+   jQuery(document).ready(
+        function()
+        {
+            jQuery(".theme_div_wrapper").click(
+               function(event)
+             {
+                jQuery(this).addClass("active").siblings().removeClass("active");
+                 }
+        );
+    });

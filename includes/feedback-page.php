@@ -15,8 +15,8 @@ $current_user = wp_get_current_user();
    
     
     <div id="icon-options-general" class="icon32 icon32-posts-post"><br></div><h2><?php _e("Sola Newsletters Feedback","sola") ?></h2>
-    <h3><?php _e("We'd love to hear your comments and/or suggestions","sola"); ?></h3>
-    <form name="sola_feedback" action="" method="POST">
+    <form name="sola_feedback" action="" method="POST" class="sola_nl_shadows">
+     <h3><?php _e("We'd love to hear your comments and/or suggestions","sola"); ?></h3>
      <table width='100%'>
         <tr>
             <td width="250px" >
@@ -47,7 +47,7 @@ $current_user = wp_get_current_user();
                 <label><?php _e("Feedback","sola"); ?></label>
             </td>
             <td>
-                <textarea name="sola_nl_feedback_feedback" cols='60' rows='10'></textarea>
+                <textarea name="sola_nl_feedback_feedback" style="width: 100%; height: 200px;"></textarea>
            </td>
         </tr>
         <tr>

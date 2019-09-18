@@ -133,6 +133,13 @@ hr{
     display: inline-block;
 }
 
+.sola_nl_shadows {
+    box-shadow: 0px 3px 6px rgba(0,0,0,0.1);
+    background: #fff;
+    padding: 15px;
+}
+
+
 /*----- CUSTOM STYLES ------*/
 .sola-input{
    width:300px;
@@ -145,6 +152,7 @@ hr{
    font-size: 16px;
    font-weight: bold;
 }
+
 .progressBar {
     width: 100px;
     height: 10px;
@@ -282,8 +290,12 @@ padding: 0px 20px;
 line-height: 30px;
 }
 #sola_tabs .ui-state-default a{
-    color:#FFFFFF;
-    text-decoration:none;
+    color: #000;
+    text-decoration: none;
+    padding-left: 20px;
+    width: 100%;
+    text-align: left;
+    box-sizing: border-box;
 }
 #sola_tabs .ui-state-default a:hover{
     color:#FFFFFF;
@@ -305,7 +317,10 @@ line-height: 30px;
     height: 28px;
 }
 #sola_tabs .ui-state-active a{
-    color:#0073aa;
+    width: 100%;
+    color: #000 !important;
+    text-align: left;
+    box-sizing: border-box;
 }
 #sola_tabs .ui-tabs-nav {
     text-align: center;
@@ -321,20 +336,23 @@ line-height: 30px;
     padding:0 !important;
 }
 
-.theme_div_wrapper h3 { margin:0; padding:2px; }
 .theme_div_wrapper p { margin:0; padding:2px; }
 .theme_div_wrapper input[type=radio]{
   display:none;
 }
+
 .theme_div_wrapper input[type=radio] + img{
-  cursor:pointer;
-  border:1px solid #ccc;
-  border-radius: 10px;
-  padding:4px;
+    cursor: pointer;
+    width: 100%;
+    left: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    /* top: 0; */
+    position: absolute;
+    /* padding: 4px; */
 }
-.theme_div_wrapper input[type=radio]:checked + img{
-  border:8px solid #ec6851;
-}
+
+
 .themes_wrapper{
     margin-top: 10px;
     margin-bottom: 10px;
@@ -342,6 +360,9 @@ line-height: 30px;
 .theme_div_wrapper{
     display: inline-block;
     text-align: center;
+    width: 300px;
+    margin-left: 20px;
+    position: relative;
 }
 .theme_img{
     border: solid 1px #000;
@@ -428,5 +449,127 @@ body div.hidden_list_descriptions{
     clear:both;
 }
 .sola-extension-label {
-    display:block; float:left; padding:5px; margin-right:5px; font-size:0.8em; background-color:#bbb; color:#FFF; webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; }
+    display:block; 
+    float:left; 
+    padding:5px; 
+    margin-right:5px; 
+    font-size:0.8em; 
+    background-color:#bbb; 
+    color:#FFF; 
+    -webkit-border-radius: 5px; 
+    -moz-border-radius: 5px; 
+    border-radius: 5px; 
 }
+
+.theme_div_wrapper {
+    display: inline-block;
+    text-align: center;
+    width: 300px;
+    height: 200px;
+    position: relative;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    overflow: hidden;
+    border: 1px solid #eee;
+    background: #fafafa;
+    transition: opacity .5s ease-out;
+}
+
+.theme_div_wrapper:hover {
+    opacity: 0.8;
+}
+
+.ui-tabs-nav .ui-helper-reset .ui-helper-clearfix .ui-widget-header .ui-corner-all{
+    background: #fff;
+    border: none;
+}
+
+.ui-tabs-anchor {
+    width: 100px;
+    text-align: center;
+    height: 25px;
+    line-height: 25px;
+}
+
+.ui-tabs-anchor:focus {
+    box-shadow: none;
+
+}
+
+.theme_div_wrapper h3 {
+    margin: 0;
+    padding-top: 7px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+/*input[type=radio]:checked + img{
+  border:8px solid #fafafa;
+}*/
+
+#tabs-1 h3 {
+    font-weight: 400;
+}
+
+#tabs-2 h3 {
+    font-weight: 400;
+}
+
+#tabs-2 {
+    padding: 35px;
+}
+
+.theme_div_wrapper.active {
+    background: #23282d;
+    color: #fff;
+    border: solid 1px #23282d;
+}
+
+.theme_div_wrapper.active h3 {
+    color: #fff;
+}
+
+.ui-tabs .ui-tabs-nav {
+    background: #ffffff;
+    border: none;
+    padding: 0 !important;
+}
+
+#tabs {
+    background: none;
+    border: none;
+}
+
+#tabs .ui-tabs-nav {
+    background: none;
+}
+
+#tabs .ui-tabs-panel {
+    box-shadow: 0px 3px 6px rgba(0,0,0,0.1);
+    background: #ffffff;
+    
+}
+
+#tabs hr {
+    border: none;
+    border-bottom: 1px solid #ddd;
+}
+
+.ui-tabs .ui-tabs-nav li {
+    list-style: none;
+    float: left;
+    position: relative;
+    top: 0;
+    margin: 0;
+    border-bottom-width: 0;
+    padding: 0;
+    white-space: nowrap;
+    border: none;
+    background: 
+}
+
+.ui-tabs .ui-tabs-nav li.ui-tabs-active {
+    margin: 0;
+}
+
+
