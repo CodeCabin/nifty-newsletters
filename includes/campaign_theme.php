@@ -12,10 +12,14 @@ if(!current_user_can("manage_options")){
 $camp_id = intval($_GET['camp_id']); 
 //$themes = sola_get_theme_basic();
 
+wp_register_style( 'sola_nl_cp_jqueryui_styles', "https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css", array(), '1.1' );
+wp_enqueue_style( 'sola_nl_cp_jqueryui_styles' );
+
+wp_register_script('sola_nl_cp_jqueryui_scripts', "https://code.jquery.com/ui/1.12.1/jquery-ui.js", false);
+wp_enqueue_script( 'sola_nl_cp_jqueryui_scripts' );
+
 ?>
             <!-- Just added this -->
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript">
     jQuery( function() {
         jQuery( "#tabs" ).tabs();
