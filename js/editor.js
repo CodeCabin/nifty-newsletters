@@ -556,7 +556,7 @@ jQuery(function() {
                         var feat_image = ui.item.attr('feat_image');
                         var title = ui.item.attr("title");
                         var post_url = ui.item.attr("post_url");
-                        td_data = jQuery("<img src='"+feat_image+"' height='150px' style='margin:0 10px 0 0; float:left;'/><h3>"+title+"</h3><p>"+post+" <a title='Read More' href='"+post_url+"'>Read More</a></p>");
+                        td_data = jQuery("<img src='"+feat_image+"' height='150px' style='margin:0 10px 0 0; float:left;'/><h3>"+title+"</h3><p>"+post+" <a title='"+ sola_editor_strings.read_more +"' href='"+post_url+"'>"+ sola_editor_strings.read_more +"</a></p>");
                     } else if(ui.item.attr('type') === "social_icons"){
                         td_data = ui.item.html();
                         td.addClass("social-icons-div");
@@ -648,7 +648,7 @@ jQuery(function() {
                         var feat_image = ui.item.attr('feat_image');
                         var title = ui.item.attr("title");
                         var post_url = ui.item.attr("post_url");
-                        td_data = jQuery("<img src='"+feat_image+"' height='150px' style='margin:0 10px 0 0; float:left;'/><h3>"+title+"</h3><p>"+post+" <a title='Read More' href='"+post_url+"'>Read More</a></p>");
+                        td_data = jQuery("<img src='"+feat_image+"' height='150px' style='margin:0 10px 0 0; float:left;'/><h3>"+title+"</h3><p>"+post+" <a title='"+ sola_editor_strings.read_more +"' href='"+ post_url +"'>"+ sola_editor_strings.read_more +"</a></p>");
                     } else if(ui.item.attr('type') === "social_icons"){
                         td_data = ui.item.html();
                         td.addClass("social-icons-div");
@@ -833,10 +833,73 @@ function sola_save_letter(redirect){
                 return true;
             }
             
-            
         });
         sola_add_toolbars();
-        
-        
-        
     }
+
+
+// Adds tooltips to the Newsletter editor
+     jQuery(function () {
+        jQuery('[data-toggle="tooltip"]').tooltip()
+    })
+     
+
+// Adds Blog Post search field to the editor draggable element
+var sola_nl_active_search = false;
+
+function sola_search_blog_posts(){
+    var keyword = jQuery('#blog_post_search').val();
+
+    if (sola_nl_active_search != false) {
+        sola_nl_active_search.abort();
+  
+    } else {
+  
+        jQuery('#sola_nl_blog_list').fadeOut(function(){
+            jQuery(this).html("<div style='text-align: center;'>Searching...</div>").fadeIn();
+        });
+    }
+
+    sola_nl_active_search = jQuery.ajax({
+        url: sola_editor_ajax_url,
+        type: 'post',
+        data: { action: 'sola_blog_search', keyword: keyword  },
+        success: function(data) {
+            sola_nl_active_search = false;
+
+            jQuery('#sola_nl_blog_list').fadeOut(function(){
+                jQuery(this).html( data ).fadeIn();
+
+                jQuery('.sola_addable_item').draggable({
+                    helper:"clone",
+                    connectToSortable: ".sortable-list",
+                    start:function(event,ui)
+                    {
+                       
+                    },
+                    stop:function(event,ui)
+                    {
+                        jQuery("#sola_nl_save_text").empty();
+                        if (typeof jQuery(ui.helper).attr('type') !== 'undefined' && jQuery(ui.helper).attr('type') === 'table') {
+                        } else {
+                          return jQuery('<div>').addClass('editable').text('Drag to the newsletter');
+                        }
+                        
+                    }
+                });
+            });
+        }
+    });
+}
+
+// Allows Options tab in editor to hide/show when clicking other tabs.
+ jQuery(function () {
+
+    jQuery("#content-options, #style-options").click(function(){
+      jQuery("#editor-automatic").hide();
+    });
+
+    jQuery("#editor-automatic").click(function(){
+      jQuery("#editor-automatic").show();
+    });
+})

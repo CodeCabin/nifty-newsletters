@@ -35,6 +35,7 @@ $camp_type = maybe_unserialize($camp_details->automatic_data);
 
 if(isset($camp_type['action'])) { $auto_camp_type = $camp_type['action']; } else { $auto_camp_type = '2'; } ;
 
+$sola_nl_is_autocamp = $camp_details->type == '2' && $auto_camp_type == 3 ? true : false;
 
 ?>
 
@@ -48,11 +49,11 @@ if(isset($camp_type['action'])) { $auto_camp_type = $camp_type['action']; } else
 </div>
 <div class="sola-content-fixed" style="z-index:100">
     <div class="sola-header-content ">        
-        <div class="sola-sidebar-header">
+        <div class="sola-sidebar-header <?php echo ($sola_nl_is_autocamp ? 'sola_nl_autocamp' : '') ?>">
             <ul>
                 <li class="active editor_options_header <?php if($auto_camp_type == 3){ echo 'automatic'; } else { echo 'manual'; } ?>" did="editor-content" id="content-options"><?php _e("Content","sola"); ?></li>
                 <li class="editor_options_header <?php if($auto_camp_type == 3){ echo 'automatic'; } else { echo 'manual'; } ?>" did="editor-styles" id="style-options"><?php _e("Style","sola"); ?></li>
-                <?php if ($camp_details->type == '2' && $auto_camp_type == 3) { ?>
+                <?php if ($sola_nl_is_autocamp) { ?>
                     <li class="editor_options_header <?php if($auto_camp_type == 3){ echo 'automatic'; } else { echo 'manual'; } ?>" did="editor-automatic" id="automatic-options"><?php _e("Options","sola"); ?></li>
                 <?php } ?>
             </ul>
@@ -72,23 +73,23 @@ if(isset($camp_type['action'])) { $auto_camp_type = $camp_type['action']; } else
                 <div class="add-box sola_addable_item  sola_css_ai_text" type="automatic_content" id="auto-content">
                     <div class="add-box-title">
                         <h3><?php _e("Content","sola"); ?></h3>
-                        <i class="fa fa-3x fa-file-text-o"></i>
+                        <i class="fa fa-3x fa-file-text-o" data-toggle="tooltip" data-placement="top" title="Click and Drag"></i>
                     </div>
                 </div>
                 <?php } ?>
                 <div class="add-box sola_addable_item sola_css_ai_text" type="text">
                     <div class="add-box-title">
                         <h3><?php _e("Text","sola"); ?></h3>
-                        <i class="fa fa-3x fa-font"></i>
+                        <i class="fa fa-3x fa-font" data-toggle="tooltip" data-placement="top" title="Click and Drag"></i>
                     </div>
                 </div>
                 <div class="add-box sola_css_ai_table sola_show_editior_div">
                     <div class="add-box-title">
                         <h3><?php _e("Table","sola"); ?></h3>
-                        <i class="fa fa-3x fa-table"></i>
+                        <i class="fa fa-3x fa-table" data-toggle="tooltip" data-placement="top" title="Click to Expand/Collapse"></i>
                     </div>
                     <div class="sola-extra-content" style="padding:0 20px 10px 20px;">
-                        <div class="add-box" style="width:80px; height:80px; margin: 10px 10px 10px 10px;">
+                        <div class="add-box" style="width:80px; height:80px; margin: 10px 10px 10px 10px;" data-toggle="tooltip" data-placement="top" title="Click and Drag">
                             <div class="add-box-title sola_addable_item" type="table" cols="2">
                                 <center>
                                     <h5><?php _e("2 cols","sola"); ?></h5>
@@ -96,7 +97,7 @@ if(isset($camp_type['action'])) { $auto_camp_type = $camp_type['action']; } else
                                 </center>
                             </div>
                         </div>
-                        <div class="add-box" style="width:80px; height:80px; margin: 10px 10px 10px 10px;">
+                        <div class="add-box" style="width:80px; height:80px; margin: 10px 10px 10px 10px;" data-toggle="tooltip" data-placement="top" title="Click and Drag">
                             <div class="add-box-title sola_addable_item" type="table" cols="3">
                                 <center>
                                     <h5><?php _e("3 cols","sola"); ?></h5>
@@ -104,7 +105,7 @@ if(isset($camp_type['action'])) { $auto_camp_type = $camp_type['action']; } else
                                 </center>
                             </div>
                         </div>
-                        <div class="add-box" style="width:80px; height:80px; margin: 10px 10px 10px 10px;">
+                        <div class="add-box" style="width:80px; height:80px; margin: 10px 10px 10px 10px;" data-toggle="tooltip" data-placement="top" title="Click and Drag">
                             <div class="add-box-title sola_addable_item" type="table" cols="4">
                                 <center>
                                     <h5><?php _e("4 cols","sola"); ?></h5>
@@ -118,7 +119,7 @@ if(isset($camp_type['action'])) { $auto_camp_type = $camp_type['action']; } else
                 <div class="add-box sola_show_editior_div">
                     <div class="add-box-title">
                         <h3><?php _e("Button","sola"); ?></h3>
-                        <i class="fa fa-3x fa-square"></i>
+                        <i class="fa fa-3x fa-square" data-toggle="tooltip" data-placement="top" title="Click to Expand/Collapse"></i>
                     </div>
                     <div class="sola-extra-content" style="padding:0 20px 10px 10px;">
                         
@@ -134,16 +135,25 @@ if(isset($camp_type['action'])) { $auto_camp_type = $camp_type['action']; } else
                             </label>
                             <input type="text" class="form-control" id="sola_nl_btn_link" placeholder="http://www.linkhere.com"/>
                         </div>
-                        <div class="sola_addable_item" type="btn" ><a href="" style="text-decoration:none; display: block; " class="sola_nl_btn"  id="sola_nl_btn"><?php _e('Put Your Text Here', 'sola'); ?></a></div>
+                        <div class="sola_addable_item" type="btn" data-toggle="tooltip" data-placement="top" title="Click and Drag"><a href="" style="text-decoration:none; display: block; " class="sola_nl_btn"  id="sola_nl_btn"><?php _e('Put Your Text Here', 'sola'); ?></a></div>
                     </div>
                 </div>
                 
                 <div class="add-box sola_show_editior_div">
                     <div class="add-box-title">
                         <h3><?php _e("Blog Post","sola"); ?></h3>
-                        <i class="fa fa-3x fa-bullhorn"></i>   
+                        <i class="fa fa-3x fa-bullhorn" data-toggle="tooltip" data-placement="top" title="Click to Expand/Collapse"></i>   
                     </div>
                     <div class="sola-extra-content">
+    
+                         <div class="blog_post_search" id="datafetch">
+                            <input type="text" id="blog_post_search" placeholder="Search.." onkeyup="sola_search_blog_posts()">
+                        </div>
+
+                        <div id="sola_nl_blog_list">
+                            
+                        
+
                         <?php
 
                         $i = 1;
@@ -159,7 +169,7 @@ if(isset($camp_type['action'])) { $auto_camp_type = $camp_type['action']; } else
                             endif; ?>
 
 
-                                <div id="sola_newsletter_addableitems " >
+                                <div class="sola_newsletter_addableitems" data-toggle="tooltip" data-placement="top" title="Click and Drag">
                                     
                                     <div class="sola_addable_item sola_sub_addable_item <?php if($i == 1) {?>first<?php } ?>" type="blog_post" 
                                          value="<?php echo get_the_excerpt(); ?>" 
@@ -175,13 +185,14 @@ if(isset($camp_type['action'])) { $auto_camp_type = $camp_type['action']; } else
 
                         endforeach;
                         ?>
+                        </div>
                     </div>
                 </div>
                 
                 <div class="add-box sola_show_editior_div">
                     <div class="add-box-title">
                         <h3><?php _e("Images","sola"); ?></h3>
-                        <i class="fa fa-3x fa-picture-o"></i>
+                        <i class="fa fa-3x fa-picture-o" data-toggle="tooltip" data-placement="top" title="Click to Expand/Collapse"></i>
                     </div>
                     <div class="sola-extra-content">
                         <center>
@@ -217,7 +228,7 @@ if(isset($camp_type['action'])) { $auto_camp_type = $camp_type['action']; } else
                 <div class="add-box sola_show_editior_div">
                     <div class="add-box-title">
                         <h3><?php _e("Divider","sola"); ?></h3>
-                        <i class="fa fa-3x fa-bars"></i>
+                        <i class="fa fa-3x fa-bars" data-toggle="tooltip" data-placement="top" title="Click to Expand/Collapse"></i>
                     </div>
                     
                     <div class="sola-extra-content">
@@ -229,7 +240,7 @@ if(isset($camp_type['action'])) { $auto_camp_type = $camp_type['action']; } else
                             foreach($files as $file){
                                 if($file != "." && $file != ".."){
                                     ?>
-                            <div type="image_divider" truesrc="<?php echo PLUGIN_DIR ?>/images/hr/<?php echo $file ?>" thumbnail="<?php echo PLUGIN_DIR ?>/images/hr/<?php echo $file ?>" class="sola_addable_hr sola_sub_addable_item" >
+                            <div type="image_divider" truesrc="<?php echo PLUGIN_DIR ?>/images/hr/<?php echo $file ?>" thumbnail="<?php echo PLUGIN_DIR ?>/images/hr/<?php echo $file ?>" class="sola_addable_hr sola_sub_addable_item" data-toggle="tooltip" data-placement="top" title="Click and Drag">
 
                                 <img src="<?php echo PLUGIN_DIR ?>/images/hr/<?php echo $file ?>"  width="100%" style="max-width:540px"/>
                             </div>
@@ -245,7 +256,7 @@ if(isset($camp_type['action'])) { $auto_camp_type = $camp_type['action']; } else
                 <div class="add-box sola_show_editior_div">
                     <div class="add-box-title">
                         <h3><?php _e("Social","sola"); ?></h3>
-                        <i class="fa fa-3x fa-thumbs-up"></i>
+                        <i class="fa fa-3x fa-thumbs-up" data-toggle="tooltip" data-placement="top" title="Click to Expand/Collapse"></i>
                     </div>
                     <div class="sola-extra-content">
                         <?php 
@@ -284,7 +295,7 @@ if(isset($camp_type['action'])) { $auto_camp_type = $camp_type['action']; } else
 
                             }
                         } else { ?>
-                            <div style="padding-right: 10px">
+                            <div style="padding-right: 10px; text-align: center;">
                                 <?php _e("Please go into Sola Settings and Add links to your social Networks","sola"); ?>
                             </div> <?php
                         }
@@ -296,7 +307,7 @@ if(isset($camp_type['action'])) { $auto_camp_type = $camp_type['action']; } else
                 <div class="add-box sola_show_editior_div">
                     <div class="add-box-title">
                         <h3><?php _e("Shortcodes","sola"); ?></h3>
-                        <i class="fa fa-3x fa-code"></i>
+                        <i class="fa fa-3x fa-code" data-toggle="tooltip" data-placement="top" title="Click to Expand/Collapse"></i>
                     </div>
                     <div class="sola-extra-content" style="padding:0 20px 10px 10px;">
                         <div class="form-group">
@@ -331,22 +342,22 @@ if(isset($camp_type['action'])) { $auto_camp_type = $camp_type['action']; } else
                     <div style="text-align: center;">                        
                         <div class="add-box active" id="automatic-layout-1">
                             <input type="radio" name="automatic_layout" style="display: none;" value="layout-1" id="layout-1"/>
-                            <img title="<?php _e('Layout 1', 'sola'); ?>" src="<?php echo PLUGIN_DIR.'/images/automatic-post-layout-1.png'; ?>">
+                            <img class="sola_auto_layout" title="<?php _e('Layout 1', 'sola'); ?>" src="<?php echo PLUGIN_DIR.'/images/automatic-post-layout-1.png'; ?>">
                         </div>
                         <div class="add-box" id="automatic-layout-2">
                             <input type="radio" name="automatic_layout" style="display: none;" value="layout-2" id="layout-2"/>
-                            <img title="<?php _e('Layout 2', 'sola'); ?>" src="<?php echo PLUGIN_DIR.'/images/automatic-post-layout-2.png'; ?>">
+                            <img class="sola_auto_layout" title="<?php _e('Layout 2', 'sola'); ?>" src="<?php echo PLUGIN_DIR.'/images/automatic-post-layout-2.png'; ?>">
                         </div>
                         <div class="add-box" id="automatic-layout-3">
                             <input type="radio" name="automatic_layout" style="display: none;" value="layout-3" id="layout-3"/>
-                            <img title="<?php _e('Layout 3', 'sola'); ?>" src="<?php echo PLUGIN_DIR.'/images/automatic-post-layout-3.png'; ?>">
+                            <img class="sola_auto_layout" title="<?php _e('Layout 3', 'sola'); ?>" src="<?php echo PLUGIN_DIR.'/images/automatic-post-layout-3.png'; ?>">
                         </div>
                         <div class="add-box" id="automatic-layout-4">
                             <input type="radio" name="automatic_layout" style="display: none;" value="layout-4" id="layout-4"/>
-                            <img title="<?php _e('Layout 4', 'sola'); ?>" src="<?php echo PLUGIN_DIR.'/images/automatic-post-layout-4.png'; ?>">
+                            <img class="sola_auto_layout" title="<?php _e('Layout 4', 'sola'); ?>" src="<?php echo PLUGIN_DIR.'/images/automatic-post-layout-4.png'; ?>">
                         </div>
                     </div>
-                    <div class="automatic-layouts" id="auto_options" style="margin: 8px 5px;">
+                    <div class="automatic-layouts" id="auto_options">
                 
                         <p style="margin-top: 15px; ">                        
                             <input type="number" min="1" id="automatic_options_posts" name="automatic_options_posts" style="width: 50px;" value="1"/>
@@ -386,8 +397,8 @@ if(isset($camp_type['action'])) { $auto_camp_type = $camp_type['action']; } else
                         </p>
                         
                     </div>
-                    <div style='text-align: center;'>
-                        <strong style='color: red;'><?php _e('This functionality is still in Beta. If you experience any issues please contact ', 'sola'); ?><a href='http://solaplugins.com/support-desk/' target='_BLANK'><?php _e('support', 'sola'); ?></a></strong>
+                    <div class="sola_nl_beta_error">
+                        <strong class="sola_nl_beta_message"><?php _e('This functionality is still in Beta. If you experience any issues please contact ', 'sola'); ?><a href='http://solaplugins.com/support-desk/' target='_BLANK'><?php _e('support', 'sola'); ?></a></strong>
                     </div>
                 </form>
             </div>
@@ -412,284 +423,3 @@ if(isset($camp_type['action'])) { $auto_camp_type = $camp_type['action']; } else
     <i class="fa fa-desktop"></i>
 </div>
 
-<?php /* 
- * <div style='display:block;  clear:both; width:602px;'>
-
-
-        </div>
-
-
-
-        <div id="sola_newsletter_wrapper"  camp_id="<?php echo intval($_GET['camp_id']) ?>">        
-                
-                ?>        
-        </div>
- * 
-*/ ?>
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<?php /*
-?>
-
-<div class="wrap" style='width:559px;' >    
-    
-
-    <div class="icon32" id="icon-edit-pages"><br /></div>
-    <h2 style='padding-right: 0;'><?php _e("Sola Newsletter Creation","sola-newsletters"); ?>
-    <button id="sola_nl_next_temp_btn" class='button-primary sola_nl_next_btn' style='float:right;'>Next</button>
-
-    <!---       REMOVED SAVE BTN as editor now saves automatically
-     
-    <button id="sola_nl_save_temp_btn" class='btnSave button-primary sola_nl_save_temp_btn ' style='float:right; margin-right:20px;'>Save</button> -->
-     </h2>  
-</div>
-
-
-<?php
-$sola_nl_ajax_nonce = wp_create_nonce("sola_nl");
-?>
-
-<script language="javascript">
-    var sola_nl_nonce = '<?php echo $sola_nl_ajax_nonce; ?>';
-    var sola_is_editing = false;
-    var sola_is_editing_id = null;
-
-</script>
-
-<div style='display:block;  clear:both; width:602px;'>
-
- <div id='sola_nl_save_text' style='float:right; margin-right:10px; font-weight:bold; padding-top:4px;'></div>
-</div>
-
-
-
-<div id="sola_newsletter_wrapper" style="float:left;" camp_id="<?php echo intval($_GET['camp_id']) ?>">        
-        <?php 
-        $letter = sola_nl_get_letter(intval($_GET['camp_id']));
-        if ($letter){
-            echo $letter;
-        } else {
-            sola_nl_default_letter();
-        }
-        ?>        
-</div>
-<div style="clear: both; padding-top:20px;width: 602px;">
-
-    <input type="email" value="<?php echo get_option('admin_email')?>" class="sola-input" id="sola_nl_to_mail_test" />
-    <button class="button-primary sola_send_test_mail">Send Test</button>
-    <button id="sola_nl_next_temp_btn" class='button-primary sola_nl_next_btn' style='float:right;'>Next</button>
-</div>
-
-<div id='sola_place_test'>
-
-</div>
-
-<div id='sola_main_box' style='display:block; position:fixed; top:20%; height:400px; left: 800px; width:450px; padding:10px;'>
-
-    <div id="sola_nl_editor_tabs">
-        <ul>
-            <li><a href="#tabs-content" class="tabs-content"><?php _e("Content","sola"); ?></a></li>
-            <li><a href="#tabs-hr" ><?php _e("Horizontal Lines","sola"); ?></a></li>
-            <li><a href="#tabs-images" class="tabs-images"><?php _e("Images","sola"); ?></a></li>
-            <li><a href="#tabs-styling" class="tabs-styling"><?php _e("Styling","sola"); ?></a></li>
-        </ul>
-        <div id="tabs-content" style="overflow:auto;">
-
-            <div id="sola_newsletter_addableitems" style="float:left; width:380px;">
-                <div class="sola_addable_item" type="text">Text or Title</div>
-            </div>
-            <div style="clear:both"></div>
-            <div class="sola_nl_accordian">
-                <h3>Blog Post</h3>
-                <div>
-                    <?php
-
-
-                    $args = array( 'posts_per_page' => 10 );
-                    global $post;
-                    $myposts = get_posts( $args );
-                    foreach ( $myposts as $post ) : 
-                        setup_postdata($post);
-                        $sola_feat_image_url = "";
-                        if (has_post_thumbnail( $post->ID ) ): 
-                            $image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'single-post-thumbnail' ); 
-                            $sola_feat_image_url = $image[0]; 
-                        endif; ?>
-
-
-                            <div id="sola_newsletter_addableitems" style="float:left; width:380px;">
-                                <div class="sola_addable_item" type="blog_post" 
-                                     value="<?php echo get_the_excerpt(); ?>" 
-                                     feat_image="<?php echo $sola_feat_image_url ?>" 
-                                     title="<?php the_title(); ?>"
-                                     post_url="<?php echo get_permalink() ?>">
-                                         <?php the_title(); ?>
-                                </div>
-                            </div>
-
-                    <?php
-
-                    endforeach;
-                    ?>
-                </div>
-            </div>
-            <div  class="sola_nl_accordian">
-                <h3>Social Icons</h3>
-                <div>
-                    <?php 
-                    $dir = PLUGIN_URL.'/images/social-icons';
-                        $folders = scandir($dir, 1);
-                        foreach ($folders as $folder){
-                            if($folder != "." && $folder != ".."){
-                                if(is_dir($dir."/".$folder)){?>
-                                <div class="sola_nl_accordian">
-                                    <h3><?php echo $folder ?></h3>
-                                    <div>
-                                        <?php
-                                        $new_dir = $dir."/".$folder;
-                                        $files = scandir($new_dir, 1);
-                                        foreach($files as $file){
-                                            if($file != "." && $file != ".."){ ?>
-                                                 <img src="<?php echo PLUGIN_DIR ?>/images/social-icons/<?php echo $folder ?>/<?php echo $file ?>" />
-                                            <?php
-                                            }
-                                        }?>
-                                    </div>
-                                </div>
-                                <?php
-                                }
-                            }
-                        }
-                    ?>
-                    
-                </div>
-            </div>
-
-        </div>
-        <div id="tabs-hr" style="overflow:auto; height: 380px;">
-
-            <div id="sola_newsletter_addableitems" style="float:left; width:370px;">    
-                <?php 
-
-                $dir = PLUGIN_URL.'/images/hr';
-                $files = scandir($dir, 1);   
-                foreach($files as $file){
-                    if($file != "." && $file != ".."){
-                        ?>
-                <div type="image" truesrc="<?php echo PLUGIN_DIR ?>/images/hr/<?php echo $file ?>" thumbnail="<?php echo PLUGIN_DIR ?>/images/hr/<?php echo $file ?>" class="sola_addable_hr " >
-
-                    <img src="<?php echo PLUGIN_DIR ?>/images/hr/<?php echo $file ?>"  width="100%" style="max-width:540px"/>
-                </div>
-                <?php
-                    }
-                }
-
-                ?>
-
-            </div>
-        </div>
-        <div id="tabs-images" style="overflow:auto;">
-
-            <div style="float:left; width:380px;">
-                <div style='display:block;  height:340px; overflow-y: auto;'>
-                    <center>
-                        <label for="upload_image">
-                            <input id="upload_image_button" class="button" type="button" value="Choose Image" />
-                        </label>
-                    </center>    
-                    <hr/>
-                    <div id="images"><!-- Images Returned from pop up box -->
-
-                    </div>
-
-                    <?php
-//                        $query_images_args = array(
-//                        'post_type' => 'attachment', 'post_mime_type' =>'image', 'post_status' => 'inherit', 'posts_per_page' => 10,
-//                        );
-//                        $query_images = new WP_Query( $query_images_args );
-//                        $images = array();
-//                        foreach ( $query_images->posts as $image) {
-//                            $images[]= wp_get_attachment_url( $image->ID );
-//                        }
-//                        #If no images show message and take to media center else show images
-//                        if(!$images){
-//                            
-//                        } else{
-//                            foreach ($images as $image) {
-//                                $trueimage = $image;
-//                                $image = PLUGIN_DIR."/includes/timthumb.php?src=".$image."&h=78&w=78&zc=1";
-//                                echo $image;
-//                                echo "<div type=\"image\" truesrc='".$trueimage."' class=\"sola_addable_image\" style=\"float:left; padding:3px; margin:3px;\"/><img src='".$image."' ></div>";
-//                            }
-//                        }
-
-                    ?>
-
-                </div>
-            </div>
-        </div>
-        <div id="tabs-styling">
-            <style>
-
-                .colorpicker{
-                    display: inline-block;
-                    width: 20px;
-                    height: 20px;
-                    border:1px solid #ccc;
-                }
-                .style{
-                    position: relative;
-                }
-                .style-name{
-                    display: inline-block;
-                    height: 22px;
-                    position: relative;
-                    bottom: 5px;
-                    width: 100px;
-                }
-                .font{
-                    display:inline;
-                }
-                .font select{
-                    margin: 0;
-                    padding: 0;
-                    position: relative;
-                    top: -7px;
-                    height: 22px;
-                }
-                </style>
-                <div>
-                    <?php sola_get_style_editor() ?>
-
-        </div>
-
-    </div>
-</div>
-
-*/ ?>

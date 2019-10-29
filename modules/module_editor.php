@@ -28,6 +28,13 @@ function sola_nl_admin_editor_scripts_basic() {
 
             wp_localize_script('sola_nl_editor', 'editor_header_image_url', PLUGIN_DIR . "/images/editor-header.jpg");
 
+            $localized_strings = array(
+                "read_more" => __("Read More", "sola")
+            );
+            wp_localize_script('sola_nl_editor', 'sola_editor_strings', $localized_strings);
+            
+            wp_localize_script('sola_nl_editor', 'sola_editor_ajax_url', admin_url('admin-ajax.php'));
+
             wp_register_script('sola_nl_color', PLUGIN_DIR."/js/colpick.js", false);
             wp_enqueue_script( 'sola_nl_color' );
             wp_register_script('sola_nl_bootstrap_js', PLUGIN_DIR."/js/bootstrap.min.js", false);
@@ -87,7 +94,7 @@ function sola_get_style_editor($theme_id, $styles) {
     ?>
     <form id="sola_nl_styles">
         <div class="style style_element_wrapper" array_name="background">
-            <div class="style-name">
+            <div class="style-name" data-toggle="tooltip" data-placement="top" title="Click to Expand/Collapse">
                 <h4><?php _e('Background', 'sola') ?></h4>
             </div>
 
@@ -101,7 +108,7 @@ function sola_get_style_editor($theme_id, $styles) {
 
 
         <div class="style style_element_wrapper" array_name="newsletter">
-            <div class="style-name">
+            <div class="style-name" data-toggle="tooltip" data-placement="top" title="Click to Expand/Collapse">
                 <h4><?php _e('Newsletter','sola')?></h4>
             </div>
             <div class="style-options form-group" style="display:none">
@@ -194,7 +201,7 @@ function sola_get_style_editor($theme_id, $styles) {
 
         <div class="style style_element_wrapper" array_name="heading_1">
             <div class="style-name">
-                <h4><?php _e('Heading 1','sola')?></h4>
+                <h4 data-toggle="tooltip" data-placement="top" title="Click to Expand/Collapse"><?php _e('Heading 1','sola')?></h4>
             </div>
             <div class="style-options form-group" style="display:none">
                 <label><?php _e("Font Family", "sola") ?></label>
@@ -238,7 +245,7 @@ function sola_get_style_editor($theme_id, $styles) {
 
         <div class="style style_element_wrapper" array_name="heading_2">
             <div class="style-name">
-                <h4><?php _e('Heading 2','sola')?></h4>
+                <h4 data-toggle="tooltip" data-placement="top" title="Click to Expand/Collapse"><?php _e('Heading 2','sola')?></h4>
             </div>
             <div class="style-options form-group" style="display:none">
                 <label><?php _e("Font Family", "sola") ?></label>
@@ -281,7 +288,7 @@ function sola_get_style_editor($theme_id, $styles) {
 
         <div class="style style_element_wrapper" array_name="heading_3">
             <div class="style-name">
-                <h4><?php _e('Heading 3','sola')?></h4>
+                <h4 data-toggle="tooltip" data-placement="top" title="Click to Expand/Collapse"><?php _e('Heading 3','sola')?></h4>
             </div>
             <div class="style-options form-group" style="display:none">
                 <label><?php _e("Font Family", "sola") ?></label>
@@ -324,7 +331,7 @@ function sola_get_style_editor($theme_id, $styles) {
 
         <div class="style style_element_wrapper" array_name="links">
             <div class="style-name">
-                <h4><?php _e('Links','sola')?></h4>
+                <h4 data-toggle="tooltip" data-placement="top" title="Click to Expand/Collapse"><?php _e('Links','sola')?></h4>
             </div>
             <div class="style-options form-group" style="display:none">
                 <label><?php _e("Font Family", "sola") ?></label>
@@ -381,7 +388,7 @@ function sola_get_style_editor($theme_id, $styles) {
 
         <div class="style style_element_wrapper" array_name="social_icon">
             <div class="style-name">
-                <h4><?php _e('Social Icons','sola')?></h4>
+                <h4 data-toggle="tooltip" data-placement="top" title="Click to Expand/Collapse"><?php _e('Social Icons','sola')?></h4>
             </div>
             <div class="style-options form-group" style="display:none">
                 <label><?php _e("Width","sola") ?></label>
@@ -405,7 +412,7 @@ function sola_get_style_editor($theme_id, $styles) {
 
         <div class="style style_element_wrapper" array_name="button">
             <div class="style-name">
-                <h4><?php _e('Button','sola')?></h4>
+                <h4 data-toggle="tooltip" data-placement="top" title="Click to Expand/Collapse"><?php _e('Button','sola')?></h4>
             </div>
             <div class="style-options form-group" style="display:none">
                 <label><?php _e("Background Color", "sola")?></label>
@@ -480,7 +487,7 @@ function sola_get_style_editor($theme_id, $styles) {
 
         <div class="style style_element_wrapper" array_name="images">
             <div class="style-name">
-                <h4><?php _e('Images','sola')?></h4>
+                <h4 data-toggle="tooltip" data-placement="top" title="Click to Expand/Collapse"><?php _e('Images','sola')?></h4>
             </div>
             <div class="style-options form-group" style="display:none">
                 <label><?php _e("Border Color", "sola")?></label>

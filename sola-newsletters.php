@@ -3,12 +3,24 @@
 Plugin Name: Nifty Newsletters
 Plugin URI: http://www.solaplugins.com
 Description: Create beautiful email newsletters in a flash with Nifty Newsletters.
-Version: 4.0.22
+Version: 4.0.23
 Author: SolaPlugins
 Author URI: http://www.solaplugins.com
+Text Domain: sola
+Domain Path: /languages
 */
 
 /**
+ * 4.0.23 - 2019-10-28 - Medium Priority
+ * Tested in WP 5.3 beta 
+ * Enhancement: Improved UI/UX of the extensions page
+ * Enhancement: Improved UI/UX of the newsletter preview page
+ * Enhancement: Improved "Options" for when using the automatic content feature in editor
+ * Enhancement: Updated repository images
+ * New Feature: Added option to search through blog posts in editor
+ * New Feature: Added Tooltips to editor for better ux
+ * Bug Fix: Fixed a bug where the "Read More" link was not being translated
+ *
  * 4.0.22 - 2019-09-18 - High priority
  * Enhancement: Improved UI/UX of the campaign editor  
  * Enhancement: Improved UI/UX of the feedback page
@@ -259,7 +271,7 @@ define("SOLA_PLUGIN_NAME","Nifty Newsletters");
 
 global $sola_nl_version;
 global $sola_nl_version_string;
-$sola_nl_version = "4.0.22";
+$sola_nl_version = "4.0.23";
 $sola_nl_version_string = "";
 
 
@@ -334,6 +346,8 @@ add_action('wp_ajax_done_sending', 'sola_nl_action_callback');
 add_action('wp_ajax_nopriv_sola_nl_sign_up_add_sub', 'sola_nl_action_callback');
 add_action('wp_ajax_sola_nl_sign_up_add_sub', 'sola_nl_action_callback');
 add_action('wp_ajax_sola_get_next_subs', 'sola_nl_action_callback');
+
+
 
 // Shortcodes
 
@@ -1259,6 +1273,8 @@ function sola_nl_admin_feedback_layout() {
 }
 
 function sola_nl_settings_page_basic() {
+    wp_register_style( 'sola_nl_admin_setting_styles', plugins_url('/css/settings_style.css', __FILE__), array(), '1.0' );
+    wp_enqueue_style( 'sola_nl_admin_setting_styles' );
     include('includes/settings-page.php');
 }
 function sola_nl_subscribers_page(){
@@ -3736,6 +3752,7 @@ function sola_nl_data_exporter($email, $page = 1){
 
 /*
  * Registers exporter callback using WordPress filters
+ * Adds html and query to allow for blog post search
 */
 function sola_nl_register_personal_data_exporter( $exporters ) {
   $exporters['my-plugin-slug'] = array(
@@ -3747,5 +3764,39 @@ function sola_nl_register_personal_data_exporter( $exporters ) {
  
 add_filter('wp_privacy_personal_data_exporters','sola_nl_register_personal_data_exporter',10);
 
+// the ajax function
+add_action('wp_ajax_sola_blog_search' , 'sola_blog_search_ajax');
 
+
+function sola_blog_search_ajax(){
+
+    $the_query = new WP_Query( 
+        array( 
+            'posts_per_page' => 10, 
+            's' => esc_attr( $_POST['keyword'] ), 
+            'post_type' => 'post' 
+        ) 
+    );
+
+    if( $the_query->have_posts() ) {
+        while( $the_query->have_posts() ): $the_query->the_post(); ?>
+
+             <div class="sola_newsletter_addableitems" data-toggle="tooltip" data-placement="top" title="Click and Drag">
+                                    
+                <div class="sola_addable_item sola_sub_addable_item" type="blog_post" 
+                     value="<?php echo get_the_excerpt(); ?>" 
+                     feat_image="<?php echo $sola_feat_image_url ?>" 
+                     title="<?php the_title(); ?>"
+                     post_url="<?php echo get_permalink(); ?>">
+                         <?php the_title(); ?>
+                </div>
+                
+            </div>
+        <?php endwhile;
+        wp_reset_postdata();  
+    } else { 
+        echo '<h4 style="text-align: center;">No Results Found</h4>';
+    }
+    die();
+}     
 
