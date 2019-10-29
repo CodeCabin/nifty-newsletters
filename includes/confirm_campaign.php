@@ -23,7 +23,7 @@ $limit_time = get_option('sola_nl_send_limit_time');
     
     <div id="icon-edit" class="icon32 icon32-posts-post"><br></div>
     <h2><?php _e("Confirm Campaign","sola") ?></h2>
-    <div>
+    <div id="tab_container">
         <?php /* */ ?>
         <form id='<?php if ($camp->type == '2') { echo 'saveform'; } else { echo 'sendform'; } ?>' action="?page=sola-nl-menu&action=send_campaign&camp_id=<?php echo intval($_GET['camp_id']) ?>"  method="POST">
             <input type="hidden" name="camp_id"   value="<?php echo $camp->camp_id ?>" />
