@@ -11,7 +11,7 @@ Domain Path: /languages
 */
 
 /**
- * 4.0.23 - 2019-10-28 - Medium Priority
+ * 4.0.23 - 2019-11-12 - Medium Priority
  * Tested in WP 5.3 beta 
  * Enhancement: Improved UI/UX of the extensions page
  * Enhancement: Improved UI/UX of the newsletter preview page
