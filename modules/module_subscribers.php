@@ -31,7 +31,7 @@ function sola_import_subscribers($data,$list) {
         foreach ($result_array as $line) {
             if ($cnt == 0) {
                 /* email */
-                $email = $line;
+                $email = sanitize_text_field($line);
                 if (!isset($email) || $email == "") { 
                     /* error handling */
                     return new WP_Error( 'sola_error', __( 'Email address not supplied' ), 'Email not supplied on line '.$line_cnt );
@@ -49,11 +49,11 @@ function sola_import_subscribers($data,$list) {
             }
             if ($cnt == 1) {
                 /* first name */
-                if (isset($line)) { $firstname = $line; } else { $firstname = ""; }
+                if (isset($line)) { $firstname = sanitize_text_field($line); } else { $firstname = ""; }
             }
             if ($cnt == 2) {
                 /* last name */
-                if (isset($line)) { $lastname = $line; } else { $lastname = ""; }
+                if (isset($line)) { $lastname = sanitize_text_field($line); } else { $lastname = ""; }
             }
             
             

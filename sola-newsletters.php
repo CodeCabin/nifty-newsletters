@@ -878,7 +878,7 @@ function sola_nl_wp_head() {
            }
        } else {
             if( isset( $_POST['sub_import_excel'] ) && isset( $_POST['sub_list'] ) ){
-                $arm_nl_check = sola_import_subscribers(sanitize_text_field($_POST['sub_import_excel']),sanitize_text_field($_POST['sub_list']));
+                $arm_nl_check = sola_import_subscribers($_POST['sub_import_excel'], $_POST['sub_list']);
                 if ( is_wp_error($arm_nl_check) ) sola_return_error($arm_nl_check);
                 else {
                     $_SESSION['arm_nl_success'] = __("Subscribers Imported Successfully","sola");
