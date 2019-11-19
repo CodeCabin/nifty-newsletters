@@ -3,7 +3,7 @@
 Plugin Name: Nifty Newsletters
 Plugin URI: http://www.solaplugins.com
 Description: Create beautiful email newsletters in a flash with Nifty Newsletters.
-Version: 4.0.23
+Version: 4.0.24
 Author: SolaPlugins
 Author URI: http://www.solaplugins.com
 Text Domain: sola
@@ -11,6 +11,9 @@ Domain Path: /languages
 */
 
 /**
+ *  * 4.0.24 - 2019-11-19 - Medium Priority
+ * Fixed - Copy/Paste from Excel only imports first subscriber
+ * 
  * 4.0.23 - 2019-11-12 - Medium Priority
  * Tested in WP 5.3 beta 
  * Enhancement: Improved UI/UX of the extensions page
@@ -878,7 +881,7 @@ function sola_nl_wp_head() {
            }
        } else {
             if( isset( $_POST['sub_import_excel'] ) && isset( $_POST['sub_list'] ) ){
-                $arm_nl_check = sola_import_subscribers(sanitize_text_field($_POST['sub_import_excel']),sanitize_text_field($_POST['sub_list']));
+                $arm_nl_check = sola_import_subscribers($_POST['sub_import_excel'], $_POST['sub_list']);
                 if ( is_wp_error($arm_nl_check) ) sola_return_error($arm_nl_check);
                 else {
                     $_SESSION['arm_nl_success'] = __("Subscribers Imported Successfully","sola");

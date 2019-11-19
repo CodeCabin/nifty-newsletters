@@ -130,6 +130,9 @@ Please update to this version as it contains several security improvements
 
 == Changelog ==
 
+= 4.0.24 - 2019-11-19 - Medium Priority =
+* Fixed - Copy/Paste from Excel only imports first subscriber
+
 = 4.0.23 - 2019-11-12 - Medium Priority =
 * Tested in WP 5.3 beta 
 * Enhancement: Improved UI/UX of the extensions page
